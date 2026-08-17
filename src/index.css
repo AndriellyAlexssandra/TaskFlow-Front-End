@@ -1,0 +1,169 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: "Poppins", Arial, sans-serif;
+  background-color: #0a0e17;
+  color: #e8f0ff;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 24px 20px;
+  flex: 1;
+  width: 100%;
+  background-color: #131a2b;
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+main.container {
+  max-width: 1700px;
+}
+#filtros {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.btn-filtro {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #304d64;
+  border: 1px solid #263e52;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-filtro.ativo {
+  background-color: rgba(0, 238, 255, 0.021);
+  color: #00f0ff;
+  border-color: #386896;
+  font-weight: bold;
+}
+#lista-tarefas {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.kanban-quadro {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-top: 24px;
+  padding-bottom: 32px;
+  overflow-x: auto;
+}
+.kanban-coluna {
+  flex: 1;
+  min-width: 300px;
+  overflow: hidden;
+  background-color: #1b2a3b;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  padding: 12px;
+}
+.kanban-coluna-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #334155;
+}
+.kanban-coluna-header h2 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.kanban-coluna:nth-child(1) {
+  border-top: 2px solid #835962;
+}
+.kanban-coluna:nth-child(2) {
+  border-top: 2px solid #5b8492;
+}
+.kanban-coluna:nth-child(3) {
+  border-top: 2px solid #478058;
+}
+
+.kanban-coluna-header-acoes {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.kanban-contador {
+  background-color: #334155;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+.kanban-btn-add {
+  background-color: #334155;
+  color: #94a3b8;
+  border: 1px solid #808388;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.kanban-btn-add:hover {
+  background-color: #33f5ff;
+  color: #525964;
+  border: 1px solid #2ec1c9;
+}
+
+.kanban-btn-limpar {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-trash {
+  width: 20px;
+  height: 21px;
+  object-fit: contain;
+  opacity: 0.8;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+.msg-vazia {
+  color: #385a75;
+  font-size: 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+footer {
+  text-align: center;
+  padding: 12px;
+  font-size: 11px;
+  color: #4a5578;
+  border-top: 1px solid #263352;
+  margin-top: auto;
+}

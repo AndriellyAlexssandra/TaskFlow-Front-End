@@ -1,0 +1,57 @@
+.sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background-color: #0d1b2a;
+  padding: 24px 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.logo h1 {
+  color: #00f0ff;
+  font-size: 1.4rem;
+  font-family: "Poppins", Arial;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.link {
+  color: #94a3b8;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.link:hover {
+  background-color: #1b2a3b;
+  color: #e2e8f0;
+}
+
+.ativo {
+  background-color: #1e3a5f;
+  color: #32dbe7;
+  font-weight: 700;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-conteudo {
+  margin-left: 220px;
+  flex: 1;
+  min-width: 0;
+}

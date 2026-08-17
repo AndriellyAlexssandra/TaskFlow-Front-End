@@ -1,0 +1,23 @@
+.tituloDescricao h1{
+    color: rgb(56, 255, 255);
+}
+.tituloDescricao p{
+    font-size: 15px;
+    color:rgb(160, 159, 158);
+}
+.texto h3{
+    color:rgb(208, 216, 216);
+}
+.texto {
+    font-size: 16px;
+    display: column;
+    
+    color:rgb(160, 159, 158);
+}
+.p{
+    margin: 0 0 3px;
+}
+.tecnologias li{
+    list-style: none;
+    color: rgb(205, 205, 206);
+}

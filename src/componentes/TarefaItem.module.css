@@ -1,0 +1,143 @@
+.tarefa {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  background-color: #0a0e17;
+  border: 1px solid #263352;
+  border-left: solid 3px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+  overflow: hidden;
+}
+.tarefa:hover {
+  background-color: #16213a;
+  border-color: #00eeff;
+}
+.tarefa.alta {
+  border-left-color: #ff2e63;
+  box-shadow: -2px 0 12px rgba(255, 46, 99, 0.2);
+}
+.tarefa.media {
+  border-left-color: #f5a623;
+  box-shadow: -2px 0 12px rgba(245, 166, 35, 0.2);
+}
+.tarefa.baixa {
+  border-left-color: #00ff55;
+  box-shadow: -2px 0 12px rgba(0, 255, 13, 0.2);
+}
+.linhaPrincipal {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+.textoTarefa {
+  flex: 1;
+  width: 0;
+  min-width: 0;
+  max-width: 100%;
+  font-size: 14px;
+  color: #e8f0ff;
+
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+.linhaSegundaria {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 5px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.badge-prioridade {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.badge-alta {
+  background-color: rgba(255, 46, 99, 0.15);
+  color: #ff2e63;
+}
+.badge-media {
+  background-color: rgba(245, 166, 35, 0.15);
+  color: #f5a623;
+}
+.badge-baixa {
+  background-color: rgba(0, 255, 13, 0.15);
+  color: #00ff55;
+}
+
+.cidade {
+  font-size: 10px;
+  color: #7a8bb0;
+  background-color: rgba(122, 139, 176, 0.1);
+  padding: 2px 7px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.acoes {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.btnMover {
+  background-color: #1a2740;
+  border: 1px solid #263352;
+  color: #00f0ff;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  line-height: 1;
+  transition: background-color 0.15s;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.btnMover:hover {
+  background-color: #00f0ff;
+  color: #0a0e17;
+}
+
+.btnDeletar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+.iconeLixeira {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
