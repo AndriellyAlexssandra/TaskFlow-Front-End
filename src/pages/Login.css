@@ -8,6 +8,7 @@
 .login-card {
   background-color: #1b2a3b;
   border: 1px solid #01393d;
+  border-style: groove;
   border-radius: 12px;
   padding: 40px 36px;
   width: 100%;
@@ -67,13 +68,13 @@
   background-color: #02cad8;
 }
 .btn-longout {
-  background-color: rgb(85, 228, 228);
+  background-color: rgb(1, 255, 255);
   color: rgb(82, 81, 80);
   border-radius: 6px;
   border-color: #01eeff;
   border-style: groove 6px;
   padding: 12px;
-  margin-top: 60px;
+  margin: auto;
 }
 .btn-longout:hover {
   background-color: #02cad8;
