@@ -93,9 +93,9 @@ function ModalTarefa({
           value={prioridade}
           onChange={(e) => setPrioridade(e.target.value)}
         >
-          <option value="alta">Alta</option>
-          <option value="media">Média</option>
-          <option value="baixa">Baixa</option>
+          <option value="alta">🔴Alta</option>
+          <option value="media">🟡Média</option>
+          <option value="baixa">🟢Baixa</option>
         </select>
         <div className={styles.botoes}>
           <button onClick={onFechar}>Cancelar</button>
