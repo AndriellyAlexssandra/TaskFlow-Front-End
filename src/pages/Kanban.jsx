@@ -1,20 +1,35 @@
-import { useState, useEffect } from "react";
 import Header from "../componentes/Header.jsx";
 import ListaTarefas from "../componentes/ListaTarefas.jsx";
 import ModalTarefa from "../componentes/ModalTarefa.jsx";
 import lixeiraCinza from "../assets/lixeira-cinza.png";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 function Kanban() {
-  const [tarefas, setTarefas] = useState(() => {
-    const salvas = localStorage.getItem("taskflow-tarefas");
-    return salvas ? JSON.parse(salvas) : [];
-  });
+  const URL_API = "https://6a85ab049c451dc67a63ecb3.mockapi.io/tarefas";
+
+  const [tarefas, setTarefas] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    localStorage.setItem("taskflow-tarefas", JSON.stringify(tarefas));
-  }, [tarefas]);
+    async function carregarTarefas() {
+      try {
+        setCarregando(true);
+        setErro("");
 
-  const [proximoId, setProximoId] = useState(1);
+        const resposta = axios.get(URL_API);
+        setTarefas(resposta.data);
+      } catch (e) {
+        setErro("Erro ao carregar tarefas. Verifique a conexão.");
+        console.error(e);
+      } finally {
+        setCarregando(false);
+      }
+    }
+    carregarTarefas();
+  }, []);
+
   const [filtroPrioridade, setFiltroPrioridade] = useState("todas");
 
   useEffect(() => {
@@ -22,29 +37,44 @@ function Kanban() {
     document.title = pendentes > 0 ? `(${pendentes}) TaskFlow` : "TaskFlow";
   }, [tarefas]);
 
-  function salvarTarefa(dados) {
-    if (dados.id !== undefined) {
-      setTarefas(
-        tarefas.map((t) => (t.id === dados.id ? { ...t, ...dados } : t)),
-      );
-    } else {
-      const novaTarefa = {
-        ...dados,
-        id: proximoId,
-      };
-      setTarefas([...tarefas, novaTarefa]);
-      setProximoId(proximoId + 1);
+  async function salvarTarefa(dados) {
+    try {
+      if (dados.id !== undefined) {
+        const { data: tarefaEditada } = await axios.put(
+          URL_API + "/" + dados.id,
+          {
+            texto: dados.texto,
+            prioridade: dados.prioridade,
+            cidade: dados.cidade,
+            coluna: dados.coluna,
+          },
+        );
+        setTarefas((tarefasAtuais) =>
+          tarefasAtuais.map(tarefas.id === dados.id ? tarefaEditada : tarefas),
+        );
+      } else {
+        const { data: novaTarefa } = await axios.post(URL_API, dados);
+        setTarefas((tarefasAtuais) => [...tarefasAtuais, novaTarefa]);
+      }
+    } catch (e) {
+      setErro("Erro ao salvar tarefa. Tente novamente.");
+      console.error(e);
     }
   }
-
-  const deletarTarefa = (id) => {
+  async function deletarTarefa(id) {
     const confirmado = window.confirm(
       "Tem certeza que deseja deletar esta tarefa?",
     );
-    if (confirmado) {
-      setTarefas(tarefas.filter((t) => t.id !== id));
+    if (!confirmado) return;
+    try {
+      await axios.delete(URL_API + "/" + id);
+      setTarefas((tarefasAtuais) => tarefasAtuais.filter(tarefas.id !== id));
+    } catch (e) {
+      setErro("Erro ao deletar tarefa. Tente novamente. ");
+      console.error(e);
     }
-  };
+  }
+
   const limparColuna = (nomeColuna) => {
     const confirmado = window.confirm(
       "Tem certeza que deseja limpar todas as tarefas desta coluna?",
@@ -54,11 +84,19 @@ function Kanban() {
     }
   };
 
-  const moverTarefa = (id, novaColuna) => {
-    setTarefas(
-      tarefas.map((t) => (t.id === id ? { ...t, coluna: novaColuna } : t)),
-    );
-  };
+  async function moverTarefa(id, novaColuna) {
+    try {
+      const { data: tarefaMovida } = await axios.patch(URL_API + "/" + id, {
+        coluna: novaColuna,
+      });
+      setTarefas((tarefasAtuais) =>
+        tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
+      );
+    } catch (e) {
+      setErro("Erro ao mover tarefa. Tente novamente.");
+      console.error(e);
+    }
+  }
 
   const tarefasPorColuna = (nomeColuna) => {
     return tarefas.filter((t) => {
@@ -68,10 +106,11 @@ function Kanban() {
       return bateColuna && batePrioridade;
     });
   };
-  const totalTarefas = tarefas.length;
+  //bug no length e filter
+const totalTarefas = tarefas.length;
   const pendentes = tarefas.filter((t) => t.coluna !== "concluido").length;
   const concluidas = tarefas.filter((t) => t.coluna === "concluido").length;
-
+  
   const [modalAberto, setModalAberto] = useState(false);
   const [tarefaEditando, setTarefaEditando] = useState(null);
   const [colunaAtiva, setColunaAtiva] = useState("afazer");
@@ -96,6 +135,15 @@ function Kanban() {
         concluidas={concluidas}
       />
       <main className="container">
+        {carregando && (
+          <p style={{ textAlign: "center", color: "#94A3B8" }}>
+            Carregando tarefas...
+          </p>
+        )}
+        {erro && (
+          <p style={{ textAlign: "center", color: "#EF4444" }}>{erro}</p>
+        )}
+
         <section id="filtros">
           <button
             type="button"
@@ -126,118 +174,119 @@ function Kanban() {
             🟢 Baixa
           </button>
         </section>
-        <div className="kanban-quadro">
-          <div className="kanban-coluna">
-            <div className="kanban-coluna-header">
-              <h2>A Fazer</h2>
-              <div className="kanban-coluna-header-acoes">
-                <span className="kanban-contador">
-                  {tarefasPorColuna("afazer").length}
-                </span>
-                <button
-                  className="kanban-btn-add"
-                  onClick={() => abrirModalCriar("afazer")}
-                  title="Incluir tarefa"
-                >
-                  +
-                </button>
-                <button
-                  className="kanban-btn-limpar"
-                  onClick={() => limparColuna("afazer")}
-                  
-                >
-                  <img
-                    src={lixeiraCinza}
-                    title="Deletar todas as tarefas desta coluna."
-                    class="icon-trash"
-                  ></img>
-                </button>
+        {!carregando && !erro && (
+          <div className="kanban-quadro">
+            <div className="kanban-coluna">
+              <div className="kanban-coluna-header">
+                <h2>A Fazer</h2>
+                <div className="kanban-coluna-header-acoes">
+                  <span className="kanban-contador">
+                    {tarefasPorColuna("afazer").length}
+                  </span>
+                  <button
+                    className="kanban-btn-add"
+                    onClick={() => abrirModalCriar("afazer")}
+                    title="Incluir tarefa"
+                  >
+                    +
+                  </button>
+                  <button
+                    className="kanban-btn-limpar"
+                    onClick={() => limparColuna("afazer")}
+                  >
+                    <img
+                      src={lixeiraCinza}
+                      title="Deletar todas as tarefas desta coluna."
+                      class="icon-trash"
+                    ></img>
+                  </button>
+                </div>
               </div>
+
+              <ListaTarefas
+                tarefas={tarefasPorColuna("afazer")}
+                onDeletar={deletarTarefa}
+                onMover={moverTarefa}
+                colunaAnterior={null}
+                colunaProxima="andamento"
+                onEditar={abrirModalEditar}
+              />
             </div>
 
-            <ListaTarefas
-              tarefas={tarefasPorColuna("afazer")}
-              onDeletar={deletarTarefa}
-              onMover={moverTarefa}
-              colunaAnterior={null}
-              colunaProxima="andamento"
-              onEditar={abrirModalEditar}
-            />
-          </div>
-
-          <div className="kanban-coluna">
-            <div className="kanban-coluna-header">
-              <h2>Em Andamento</h2>
-              <div className="kanban-coluna-header-acoes">
-                <span className="kanban-contador">
-                  {tarefasPorColuna("andamento").length}
-                </span>
-                <button
-                  className="kanban-btn-add"
-                  onClick={() => abrirModalCriar("andamento")}
-                  title="Incluir tarefa"
-                >
-                  +
-                </button>
-                <button
-                  className="kanban-btn-limpar"
-                  onClick={() => limparColuna("andamento")}
-                >
-                  <img
-                    src={lixeiraCinza}
-                    title="Deletar todas as tarefas desta coluna."
-                    className="icon-trash"
-                  ></img>
-                </button>
+            <div className="kanban-coluna">
+              <div className="kanban-coluna-header">
+                <h2>Em Andamento</h2>
+                <div className="kanban-coluna-header-acoes">
+                  <span className="kanban-contador">
+                    {tarefasPorColuna("andamento").length}
+                  </span>
+                  <button
+                    className="kanban-btn-add"
+                    onClick={() => abrirModalCriar("andamento")}
+                    title="Incluir tarefa"
+                  >
+                    +
+                  </button>
+                  <button
+                    className="kanban-btn-limpar"
+                    onClick={() => limparColuna("andamento")}
+                  >
+                    <img
+                      src={lixeiraCinza}
+                      title="Deletar todas as tarefas desta coluna."
+                      className="icon-trash"
+                    ></img>
+                  </button>
+                </div>
               </div>
+              <ListaTarefas
+                tarefas={tarefasPorColuna("andamento")}
+                onDeletar={deletarTarefa}
+                onMover={moverTarefa}
+                colunaAnterior="afazer"
+                colunaProxima="concluido"
+                onEditar={abrirModalEditar}
+              />
             </div>
-            <ListaTarefas
-              tarefas={tarefasPorColuna("andamento")}
-              onDeletar={deletarTarefa}
-              onMover={moverTarefa}
-              colunaAnterior="afazer"
-              colunaProxima="concluido"
-              onEditar={abrirModalEditar}
-            />
-          </div>
 
-          <div className="kanban-coluna">
-            <div className="kanban-coluna-header">
-              <h2>Concluído</h2>
-              <div className="kanban-coluna-header-acoes">
-                <span className="kanban-contador">
-                  {tarefasPorColuna("concluido").length}
-                </span>
-                <button
-                  className="kanban-btn-add"
-                  onClick={() => abrirModalCriar("concluido")}
-                  title="Incluir tarefa"
-                >
-                  +
-                </button>
-                <button
-                  className="kanban-btn-limpar"
-                  onClick={() => limparColuna("concluido")}
-                  
-                >
-                  <img
-                    src={lixeiraCinza}
-                    title="Deletar todas as tarefas desta coluna"
-                    className="icon-trash"
-                  ></img>
-                </button>
+            <div className="kanban-coluna">
+              <div className="kanban-coluna-header">
+                <h2>Concluído</h2>
+                <div className="kanban-coluna-header-acoes">
+                  <span className="kanban-contador">
+                    {tarefasPorColuna("concluido").length}
+                  </span>
+                  <button
+                    className="kanban-btn-add"
+                    onClick={() => abrirModalCriar("concluido")}
+                    title="Incluir tarefa"
+                  >
+                    +
+                  </button>
+                  <button
+                    className="kanban-btn-limpar"
+                    onClick={() => limparColuna("concluido")}
+                  >
+                    <img
+                      src={lixeiraCinza}
+                      title="Deletar todas as tarefas desta coluna"
+                      className="icon-trash"
+                    ></img>
+                  </button>
+                </div>
               </div>
+              <ListaTarefas
+                tarefas={tarefasPorColuna("concluido")}
+                onDeletar={deletarTarefa}
+                onMover={moverTarefa}
+                colunaAnterior="andamento"
+                colunaProxima={null}
+                onEditar={abrirModalEditar}
+              />
             </div>
-            <ListaTarefas
-              tarefas={tarefasPorColuna("concluido")}
-              onDeletar={deletarTarefa}
-              onMover={moverTarefa}
-              colunaAnterior="andamento"
-              colunaProxima={null}
-              onEditar={abrirModalEditar}
-            />
           </div>
-        </div>
+        )}
+
         <ModalTarefa
           aberto={modalAberto}
           onFechar={() => setModalAberto(false)}

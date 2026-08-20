@@ -89,7 +89,7 @@ function ModalTarefa({
         />
         {cidade && <p className={styles.cidade}>{cidade}</p>}
 
-        <select
+        <select className="sel-prioridade"
           value={prioridade}
           onChange={(e) => setPrioridade(e.target.value)}
         >
