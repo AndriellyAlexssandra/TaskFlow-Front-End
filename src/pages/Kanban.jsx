@@ -18,7 +18,7 @@ function Kanban() {
         setCarregando(true);
         setErro("");
 
-        const resposta = axios.get(URL_API);
+        const resposta = await axios.get(URL_API);
         setTarefas(resposta.data);
       } catch (e) {
         setErro("Erro ao carregar tarefas. Verifique a conexão.");
@@ -50,7 +50,7 @@ function Kanban() {
           },
         );
         setTarefas((tarefasAtuais) =>
-          tarefasAtuais.map(tarefas.id === dados.id ? tarefaEditada : tarefas),
+          tarefasAtuais.map((t) => (t.id === dados.id ? tarefaEditada : t)),
         );
       } else {
         const { data: novaTarefa } = await axios.post(URL_API, dados);
@@ -68,7 +68,7 @@ function Kanban() {
     if (!confirmado) return;
     try {
       await axios.delete(URL_API + "/" + id);
-      setTarefas((tarefasAtuais) => tarefasAtuais.filter(tarefas.id !== id));
+      setTarefas((tarefasAtuais) => tarefasAtuais.filter((t) => t.id !== id));
     } catch (e) {
       setErro("Erro ao deletar tarefa. Tente novamente. ");
       console.error(e);
@@ -106,11 +106,11 @@ function Kanban() {
       return bateColuna && batePrioridade;
     });
   };
-  //bug no length e filter
-const totalTarefas = tarefas.length;
+
+  const totalTarefas = tarefas.length;
   const pendentes = tarefas.filter((t) => t.coluna !== "concluido").length;
   const concluidas = tarefas.filter((t) => t.coluna === "concluido").length;
-  
+
   const [modalAberto, setModalAberto] = useState(false);
   const [tarefaEditando, setTarefaEditando] = useState(null);
   const [colunaAtiva, setColunaAtiva] = useState("afazer");
@@ -197,7 +197,7 @@ const totalTarefas = tarefas.length;
                     <img
                       src={lixeiraCinza}
                       title="Deletar todas as tarefas desta coluna."
-                      class="icon-trash"
+                      className="icon-trash"
                     ></img>
                   </button>
                 </div>
