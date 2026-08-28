@@ -18,7 +18,7 @@ function Kanban() {
         setCarregando(true);
         setErro("");
 
-        const resposta = await axios.get(URL_API);
+        const resposta = await axios.get(URL_API + "/tarefas");
         setTarefas(resposta.data);
       } catch (e) {
         setErro("Erro ao carregar tarefas. Verifique a conexão.");
