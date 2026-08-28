@@ -6,7 +6,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 
 function Kanban() {
-  const URL_API = "https://6a85ab049c451dc67a63ecb3.mockapi.io";
+  const URL_API = "https://6a85ab049c451dc67a63ecb3.mockapi.io/tarefas";
 
   const [tarefas, setTarefas] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -18,7 +18,7 @@ function Kanban() {
         setCarregando(true);
         setErro("");
 
-        const resposta = await axios.get(URL_API + "/tarefas");
+        const resposta = await axios.get(URL_API);
         setTarefas(resposta.data);
       } catch (e) {
         setErro("Erro ao carregar tarefas. Verifique a conexão.");
@@ -86,7 +86,7 @@ function Kanban() {
 
   async function moverTarefa(id, novaColuna) {
     try {
-      const { data: tarefaMovida } = await axios.patch(URL_API + "/tarefas" + "/" + id, {
+      const { data: tarefaMovida } = await axios.patch(URL_API + "/" + id, {
         coluna: novaColuna,
       });
       setTarefas((tarefasAtuais) =>
