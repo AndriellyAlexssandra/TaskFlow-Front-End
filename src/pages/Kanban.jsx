@@ -57,7 +57,7 @@ function Kanban() {
         setTarefas((tarefasAtuais) => [...tarefasAtuais, novaTarefa]);
       }
     } catch (e) {
-      setErro("Erro ao salvar tarefa. Tente novamente.");
+      setErro("Erro ao salvar tarefa.Tente novamente.");
       console.error(e);
     }
   }
