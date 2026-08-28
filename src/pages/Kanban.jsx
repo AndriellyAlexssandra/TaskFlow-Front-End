@@ -86,7 +86,7 @@ function Kanban() {
 
   async function moverTarefa(id, novaColuna) {
     try {
-      const { data: tarefaMovida } = await axios.patch(URL_API + "/" + id, {
+      const { data: tarefaMovida } = await axios.put(URL_API + "/" + id, {
         coluna: novaColuna,
       });
       setTarefas((tarefasAtuais) =>
