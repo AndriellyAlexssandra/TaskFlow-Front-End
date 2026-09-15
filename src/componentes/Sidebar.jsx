@@ -3,17 +3,17 @@ import styles from "./Sidebar.module.css";
 import { useAuth } from "../contexts/AuthContext";
 
 function Sidebar() {
-  const { logado, logout } = useAuth();
+  const { token, logout } = useAuth();
   const linkClass = ({ isActive }) =>
     isActive ? styles.link + " " + styles.ativo : styles.link;
-
+ //marginLeft: token ? '220px' : '0'
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
         <h1>Taskflow🚀</h1>
       </div>
       <nav className={styles.nav}>
-        {logado && (
+        {token && (
           <NavLink to="/" className={linkClass}>
             Dashboard
           </NavLink>
@@ -22,11 +22,12 @@ function Sidebar() {
           Sobre
         </NavLink>
       </nav>
-      {logado && (
+      {token && (
         <button className="btn-longout" onClick={logout}>
           Sair
         </button>
       )}
+     
     </aside>
   );
 }
