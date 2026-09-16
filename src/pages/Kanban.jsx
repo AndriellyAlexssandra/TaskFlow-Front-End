@@ -2,11 +2,11 @@ import Header from "../componentes/Header.jsx";
 import ListaTarefas from "../componentes/ListaTarefas.jsx";
 import ModalTarefa from "../componentes/ModalTarefa.jsx";
 import lixeiraCinza from "../assets/lixeira-cinza.png";
-import axios from "axios";
+import api from "../api";
 import { useState, useEffect } from "react";
 
 function Kanban() {
-  const URL_API = "https://6a85ab049c451dc67a63ecb3.mockapi.io/tarefas";
+  //const URL_API = "https://6a85ab049c451dc67a63ecb3.mockapi.io/tarefas";
 
   const [tarefas, setTarefas] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -18,7 +18,7 @@ function Kanban() {
         setCarregando(true);
         setErro("");
 
-        const resposta = await axios.get(URL_API);
+        const resposta = await api.get("/tarefas");
         setTarefas(resposta.data);
       } catch (e) {
         setErro("Erro ao carregar tarefas. Verifique a conexão.");
@@ -38,9 +38,23 @@ function Kanban() {
   }, [tarefas]);
 
   async function salvarTarefa(dados) {
-    try {
-      if (dados.id !== undefined) {
-        const { data: tarefaEditada } = await axios.put(
+    if (dados.id !== undefined) {
+      try {
+        const resposta = await api.post("/tarefas", dados);
+        setTarefas([...tarefas, resposta.data]);
+      } catch (err) {
+        setErro("Erro ao criar tarefa");
+      }
+
+      try {
+        const resposta = await api.put(`/tarefas/${dados.id}, dados`);
+        setTarefas(tarefas.map((t) => (t.if === dados.id ? resposta.data : t)));
+      } catch (err) {
+        setErro("Erro ao editar a tarefa :( ");
+      }
+    }
+  }
+  /*  const { data: tarefaEditada } = await axios.put(
           URL_API + "/" + dados.id,
           {
             texto: dados.texto,
@@ -50,8 +64,8 @@ function Kanban() {
           },
         );
         setTarefas((tarefasAtuais) =>
-          tarefasAtuais.map((t) => (t.id === dados.id ? tarefaEditada : t)),
-        );
+          tarefasAtuais.map((t) => (t.id === dados.id ? tarefaEditada : t)), );
+        
       } else {
         const { data: novaTarefa } = await axios.post(URL_API, dados);
         setTarefas((tarefasAtuais) => [...tarefasAtuais, novaTarefa]);
@@ -60,21 +74,41 @@ function Kanban() {
       setErro("Erro ao salvar tarefa.Tente novamente.");
       console.error(e);
     }
-  }
+  }*/
+
   async function deletarTarefa(id) {
     const confirmado = window.confirm(
       "Tem certeza que deseja deletar esta tarefa?",
     );
     if (!confirmado) return;
+
     try {
-      await axios.delete(URL_API + "/" + id);
+      await api.delete(`/tarefas/${id}`);
       setTarefas((tarefasAtuais) => tarefasAtuais.filter((t) => t.id !== id));
     } catch (e) {
       setErro("Erro ao deletar tarefa. Tente novamente. ");
       console.error(e);
     }
   }
+  async function moverTarefa(id, novaColuna) {
+    try {
+      const resposta = await api.put(`/tarefas/${id}`,{coluna: novaColuna});
+       setTarefas((tarefasAtuais) =>
+        tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
+      );
 
+      /*
+      const { data: tarefaMovida } = await api.put(URL_API + "/" + id, {
+        coluna: novaColuna,
+      });
+      setTarefas((tarefasAtuais) =>
+        tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
+      );*/
+    } catch (e) {
+      setErro("Erro ao mover tarefa. Tente novamente.");
+      console.error(e);
+    }
+  }
   const limparColuna = (nomeColuna) => {
     const confirmado = window.confirm(
       "Tem certeza que deseja limpar todas as tarefas desta coluna?",
@@ -83,20 +117,6 @@ function Kanban() {
       setTarefas(tarefas.filter((t) => t.coluna !== nomeColuna));
     }
   };
-
-  async function moverTarefa(id, novaColuna) {
-    try {
-      const { data: tarefaMovida } = await axios.put(URL_API + "/" + id, {
-        coluna: novaColuna,
-      });
-      setTarefas((tarefasAtuais) =>
-        tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
-      );
-    } catch (e) {
-      setErro("Erro ao mover tarefa. Tente novamente.");
-      console.error(e);
-    }
-  }
 
   const tarefasPorColuna = (nomeColuna) => {
     return tarefas.filter((t) => {

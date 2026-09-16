@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "./Login.css";
 
-
 function Login() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
@@ -20,6 +19,7 @@ function Login() {
       const resposta = await api.post("/auth/login", {
         email,
         senha,
+        
       });
       const { token, usuario } = resposta.data;
       login(usuario, token);
@@ -46,7 +46,7 @@ function Login() {
         <input
           className="login-input"
           type="password"
-          placeholder="Senha"
+          placeholder="senha"
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleLogin()}

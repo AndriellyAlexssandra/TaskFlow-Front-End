@@ -6,12 +6,12 @@
   justify-content: center;
 }
 .login-card {
-  background-color: #1b2a3b;
+  background-color: #ff8801;
   border: 1px solid #01393d;
   border-radius: 12px;
   padding: 40px 36px;
   width: 100%;
-  max-width: 380px;
+  max-width: 380px;f
   display: flex;
   flex-direction: column;
   gap: 14px;
