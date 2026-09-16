@@ -2,38 +2,44 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import "./Login.css";
+import api from "../api";
 
 function Login() {
   const { login } = useAuth();
-  const [usuario, setUsuario] = useState("");
+  const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
   const [shake, setShake] = useState(false);
+
   const navigate = useNavigate();
 
-  function handleLogin() {
-    if (usuario === "admin" && senha === "1234") {
-      login();
+  async function handleLogin() {
+    setErro("");
+    try {
+      const resposta = await api.post("/auth/login", {
+        email,
+        senha,
+      });
+      const { token, usuario } = resposta.data;
+      login(usuario, token);
       navigate("/");
-      return;
+    } catch (err) {
+      setErro(err.response?.data?.erro || "Erro ao fazer login");
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
     }
-    setErro("Usuário ou Senha incorretos");
-    setShake(true);
-    setTimeout(() => setShake(false), 500);
   }
-
   return (
     <div className="login-container">
-      <div className={`login-card ${shake ? 'shake' : ''}`}>
-
+      <div className={`login-card ${shake ? "shake" : ""}`}>
         <h1>Login</h1>
         <p className="login-subtitulo">Acesse com seus dados para prosseguir</p>
         <input
           className="login-input"
           type="text"
           placeholder="Usuário"
-          value={usuario}
-          onChange={(e) => setUsuario(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
