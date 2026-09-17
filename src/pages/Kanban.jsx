@@ -1,8 +1,9 @@
+import api from "../api";
 import Header from "../componentes/Header.jsx";
 import ListaTarefas from "../componentes/ListaTarefas.jsx";
 import ModalTarefa from "../componentes/ModalTarefa.jsx";
 import lixeiraCinza from "../assets/lixeira-cinza.png";
-import api from "../api";
+
 import { useState, useEffect } from "react";
 
 function Kanban() {
@@ -20,6 +21,7 @@ function Kanban() {
         setCarregando(true);
         setErro("");
         const resposta = await api.get("/tarefas");
+        console.log(resposta.data);
         setTarefas(resposta.data);
       } catch (e) {
         setErro("Erro ao carregar tarefas. Verifique a conexão.");
@@ -39,7 +41,7 @@ function Kanban() {
   async function salvarTarefa(dados) {
     if (dados.id === undefined) {
       try {
-        const resposta = await api.post("/tarefas", dados);
+        const resposta = await api.post('/tarefas', dados);
         setTarefas([...tarefas, resposta.data]);
         setModalAberto(false);
       } catch (err) {
@@ -55,6 +57,20 @@ function Kanban() {
         setErro("Erro ao editar tarefa. Tente novamente.");
         console.error(err);
       }
+    }
+  }
+  
+  async function moverTarefa(id, novaColuna) {
+    try {
+      const resposta = await api.put(`/tarefas/${id}`, { coluna: novaColuna });
+      const tarefaMovida = resposta.data;
+
+      setTarefas((tarefasAtuais) =>
+        tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
+      );
+    } catch (e) {
+      setErro("Erro ao mover tarefa. Tente novamente.");
+      console.error(e);
     }
   }
 
@@ -73,26 +89,11 @@ function Kanban() {
     }
   }
 
-  async function moverTarefa(id, novaColuna) {
-    try {
-      const resposta = await api.put(`/tarefas/${id}`, { coluna: novaColuna });
-      const tarefaMovida = resposta.data;
-
-      setTarefas((tarefasAtuais) =>
-        tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
-      );
-    } catch (e) {
-      setErro("Erro ao mover tarefa. Tente novamente.");
-      console.error(e);
-    }
-  }
-
   const limparColuna = (nomeColuna) => {
     const confirmado = window.confirm(
       "Tem certeza que deseja limpar todas as tarefas desta coluna?",
     );
     if (confirmado) {
-      // Nota: Idealmente aqui você faria requisições de DELETE para a API de cada tarefa da coluna
       setTarefas(tarefas.filter((t) => t.coluna !== nomeColuna));
     }
   };
@@ -173,7 +174,6 @@ function Kanban() {
 
         {!carregando && !erro && (
           <div className="kanban-quadro">
-            {/* Coluna: A Fazer */}
             <div className="kanban-coluna">
               <div className="kanban-coluna-header">
                 <h2>A Fazer</h2>
@@ -209,7 +209,6 @@ function Kanban() {
               />
             </div>
 
-            {/* Coluna: Em Andamento */}
             <div className="kanban-coluna">
               <div className="kanban-coluna-header">
                 <h2>Em Andamento</h2>
@@ -245,7 +244,6 @@ function Kanban() {
               />
             </div>
 
-            {/* Coluna: Concluído */}
             <div className="kanban-coluna">
               <div className="kanban-coluna-header">
                 <h2>Concluído</h2>
@@ -253,6 +251,12 @@ function Kanban() {
                   <span className="kanban-contador">
                     {tarefasPorColuna("concluido").length}
                   </span>
+                  <button
+                    className="kanban-btn-add"
+                    onClick={() => abrirModalCriar("concluido")}
+                  >
+                    +
+                  </button>
                   <button
                     className="kanban-btn-limpar"
                     onClick={() => limparColuna("concluido")}

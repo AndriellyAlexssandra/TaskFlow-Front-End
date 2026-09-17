@@ -4,12 +4,17 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Sidebar from "./componentes/Sidebar";
 import RotaPrivada from "./componentes/RotaPrivada";
+import { useAuth } from "./contexts/AuthContext";
 
 function App() {
+  const { token } = useAuth();
   return (
     <div className="app-layout">
-      <Sidebar />
-      <main>
+      {token && <Sidebar />}
+      <main
+        className="app-conteudo"
+        style={{ marginLeft: token ? "220px" : "0" }}
+      >
         <Routes>
           <Route
             path="/"
@@ -21,7 +26,7 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/sobre" element={<Sobre />} />
-          <Route path="*" element={<h1>Página não encontrada</h1>} />
+          <Route path="*" element={<h1>Página não encontrada :( </h1>} />
         </Routes>
       </main>
     </div>

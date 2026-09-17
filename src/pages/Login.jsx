@@ -1,7 +1,7 @@
-import api from "../api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import api from "../api";
 import "./Login.css";
 
 function Login() {
@@ -19,13 +19,18 @@ function Login() {
       const resposta = await api.post("/auth/login", {
         email,
         senha,
-        
       });
-      const { token, usuario } = resposta.data;
+      console.log(resposta);
+       const { token, usuario } = resposta.data;
+
+// console.log("token: ", resposta.data.token)
+// console.log(resposta.data.usuario)
+
       login(usuario, token);
       navigate("/");
     } catch (err) {
-      setErro(err.response?.data?.erro || "Erro ao fazer login");
+      console.log(err);
+      setErro(err.response?.data?.erro || "Erro ao fazer login :( ");
       setShake(true);
       setTimeout(() => setShake(false), 500);
     }
@@ -38,7 +43,7 @@ function Login() {
         <input
           className="login-input"
           type="text"
-          placeholder="Usuário"
+          placeholder="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />

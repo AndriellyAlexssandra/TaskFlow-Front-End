@@ -13,12 +13,23 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
-api.interceptors.response.use((erro) => {
+api.interceptors.response.use(
+  (resposta) => resposta,
+
+  (erro) => {
+    if (erro.response?.status === 401) {
+      localStorage.removeItem("token");
+
+      window.location.href = "/login";
+    }
+    return Promise.reject(erro);
+  },
+);
+/*api.interceptors.response.use((erro) => {
   if (erro.response?.status === 401) {
     localStorage.removeItem("token");
-
     window.location.href = "/login";
   }
   return Promise.reject(erro);
-});
+});*/
 export default api;
