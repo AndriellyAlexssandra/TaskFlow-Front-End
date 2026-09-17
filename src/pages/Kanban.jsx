@@ -6,18 +6,19 @@ import api from "../api";
 import { useState, useEffect } from "react";
 
 function Kanban() {
-  //const URL_API = "https://6a85ab049c451dc67a63ecb3.mockapi.io/tarefas";
-
   const [tarefas, setTarefas] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
+  const [filtroPrioridade, setFiltroPrioridade] = useState("todas");
+  const [modalAberto, setModalAberto] = useState(false);
+  const [tarefaEditando, setTarefaEditando] = useState(null);
+  const [colunaAtiva, setColunaAtiva] = useState("afazer");
 
   useEffect(() => {
     async function carregarTarefas() {
       try {
         setCarregando(true);
         setErro("");
-
         const resposta = await api.get("/tarefas");
         setTarefas(resposta.data);
       } catch (e) {
@@ -30,51 +31,32 @@ function Kanban() {
     carregarTarefas();
   }, []);
 
-  const [filtroPrioridade, setFiltroPrioridade] = useState("todas");
-
   useEffect(() => {
     const pendentes = tarefas.filter((t) => t.coluna !== "concluido").length;
     document.title = pendentes > 0 ? `(${pendentes}) TaskFlow` : "TaskFlow";
   }, [tarefas]);
 
   async function salvarTarefa(dados) {
-    if (dados.id !== undefined) {
+    if (dados.id === undefined) {
       try {
         const resposta = await api.post("/tarefas", dados);
         setTarefas([...tarefas, resposta.data]);
+        setModalAberto(false);
       } catch (err) {
-        setErro("Erro ao criar tarefa");
+        setErro("Erro ao criar tarefa. Tente novamente.");
+        console.error(err);
       }
-
+    } else {
       try {
-        const resposta = await api.put(`/tarefas/${dados.id}, dados`);
-        setTarefas(tarefas.map((t) => (t.if === dados.id ? resposta.data : t)));
+        const resposta = await api.put(`/tarefas/${dados.id}`, dados);
+        setTarefas(tarefas.map((t) => (t.id === dados.id ? resposta.data : t)));
+        setModalAberto(false);
       } catch (err) {
-        setErro("Erro ao editar a tarefa :( ");
+        setErro("Erro ao editar tarefa. Tente novamente.");
+        console.error(err);
       }
     }
   }
-  /*  const { data: tarefaEditada } = await axios.put(
-          URL_API + "/" + dados.id,
-          {
-            texto: dados.texto,
-            prioridade: dados.prioridade,
-            cidade: dados.cidade,
-            coluna: dados.coluna,
-          },
-        );
-        setTarefas((tarefasAtuais) =>
-          tarefasAtuais.map((t) => (t.id === dados.id ? tarefaEditada : t)), );
-        
-      } else {
-        const { data: novaTarefa } = await axios.post(URL_API, dados);
-        setTarefas((tarefasAtuais) => [...tarefasAtuais, novaTarefa]);
-      }
-    } catch (e) {
-      setErro("Erro ao salvar tarefa.Tente novamente.");
-      console.error(e);
-    }
-  }*/
 
   async function deletarTarefa(id) {
     const confirmado = window.confirm(
@@ -86,34 +68,31 @@ function Kanban() {
       await api.delete(`/tarefas/${id}`);
       setTarefas((tarefasAtuais) => tarefasAtuais.filter((t) => t.id !== id));
     } catch (e) {
-      setErro("Erro ao deletar tarefa. Tente novamente. ");
+      setErro("Erro ao deletar tarefa. Tente novamente.");
       console.error(e);
     }
   }
+
   async function moverTarefa(id, novaColuna) {
     try {
-      const resposta = await api.put(`/tarefas/${id}`,{coluna: novaColuna});
-       setTarefas((tarefasAtuais) =>
-        tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
-      );
+      const resposta = await api.put(`/tarefas/${id}`, { coluna: novaColuna });
+      const tarefaMovida = resposta.data;
 
-      /*
-      const { data: tarefaMovida } = await api.put(URL_API + "/" + id, {
-        coluna: novaColuna,
-      });
       setTarefas((tarefasAtuais) =>
         tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
-      );*/
+      );
     } catch (e) {
       setErro("Erro ao mover tarefa. Tente novamente.");
       console.error(e);
     }
   }
+
   const limparColuna = (nomeColuna) => {
     const confirmado = window.confirm(
       "Tem certeza que deseja limpar todas as tarefas desta coluna?",
     );
     if (confirmado) {
+      // Nota: Idealmente aqui você faria requisições de DELETE para a API de cada tarefa da coluna
       setTarefas(tarefas.filter((t) => t.coluna !== nomeColuna));
     }
   };
@@ -131,15 +110,12 @@ function Kanban() {
   const pendentes = tarefas.filter((t) => t.coluna !== "concluido").length;
   const concluidas = tarefas.filter((t) => t.coluna === "concluido").length;
 
-  const [modalAberto, setModalAberto] = useState(false);
-  const [tarefaEditando, setTarefaEditando] = useState(null);
-  const [colunaAtiva, setColunaAtiva] = useState("afazer");
-
   function abrirModalCriar(coluna) {
     setTarefaEditando(null);
     setColunaAtiva(coluna);
     setModalAberto(true);
   }
+
   function abrirModalEditar(tarefa) {
     setTarefaEditando(tarefa);
     setModalAberto(true);
@@ -194,8 +170,10 @@ function Kanban() {
             🟢 Baixa
           </button>
         </section>
+
         {!carregando && !erro && (
           <div className="kanban-quadro">
+            {/* Coluna: A Fazer */}
             <div className="kanban-coluna">
               <div className="kanban-coluna-header">
                 <h2>A Fazer</h2>
@@ -206,7 +184,6 @@ function Kanban() {
                   <button
                     className="kanban-btn-add"
                     onClick={() => abrirModalCriar("afazer")}
-                    title="Incluir tarefa"
                   >
                     +
                   </button>
@@ -216,13 +193,12 @@ function Kanban() {
                   >
                     <img
                       src={lixeiraCinza}
-                      title="Deletar todas as tarefas desta coluna."
+                      alt="Limpar"
                       className="icon-trash"
-                    ></img>
+                    />
                   </button>
                 </div>
               </div>
-
               <ListaTarefas
                 tarefas={tarefasPorColuna("afazer")}
                 onDeletar={deletarTarefa}
@@ -233,6 +209,7 @@ function Kanban() {
               />
             </div>
 
+            {/* Coluna: Em Andamento */}
             <div className="kanban-coluna">
               <div className="kanban-coluna-header">
                 <h2>Em Andamento</h2>
@@ -243,7 +220,6 @@ function Kanban() {
                   <button
                     className="kanban-btn-add"
                     onClick={() => abrirModalCriar("andamento")}
-                    title="Incluir tarefa"
                   >
                     +
                   </button>
@@ -253,9 +229,9 @@ function Kanban() {
                   >
                     <img
                       src={lixeiraCinza}
-                      title="Deletar todas as tarefas desta coluna."
+                      alt="Limpar"
                       className="icon-trash"
-                    ></img>
+                    />
                   </button>
                 </div>
               </div>
@@ -269,6 +245,7 @@ function Kanban() {
               />
             </div>
 
+            {/* Coluna: Concluído */}
             <div className="kanban-coluna">
               <div className="kanban-coluna-header">
                 <h2>Concluído</h2>
@@ -277,21 +254,14 @@ function Kanban() {
                     {tarefasPorColuna("concluido").length}
                   </span>
                   <button
-                    className="kanban-btn-add"
-                    onClick={() => abrirModalCriar("concluido")}
-                    title="Incluir tarefa"
-                  >
-                    +
-                  </button>
-                  <button
                     className="kanban-btn-limpar"
                     onClick={() => limparColuna("concluido")}
                   >
                     <img
                       src={lixeiraCinza}
-                      title="Deletar todas as tarefas desta coluna"
+                      alt="Limpar"
                       className="icon-trash"
-                    ></img>
+                    />
                   </button>
                 </div>
               </div>
@@ -306,24 +276,18 @@ function Kanban() {
             </div>
           </div>
         )}
-
-        <ModalTarefa
-          aberto={modalAberto}
-          onFechar={() => setModalAberto(false)}
-          onSalvar={salvarTarefa}
-          tarefa={tarefaEditando}
-          coluna={colunaAtiva}
-        />
       </main>
 
-      <footer>
-        <p>
-          TaskFlow &copy; 2026 &mdash; Andrielly Alexssandra Santos de Paula.
-          &mdash; SENAI CTGAS-ER &mdash; Centro de Tecnologias do Gás e Energias
-          Renováveis.
-        </p>
-      </footer>
+      {modalAberto && (
+        <ModalTarefa
+          tarefa={tarefaEditando}
+          colunaAtiva={colunaAtiva}
+          onSalvar={salvarTarefa}
+          onFechar={() => setModalAberto(false)}
+        />
+      )}
     </div>
   );
 }
+
 export default Kanban;
