@@ -64,7 +64,6 @@ function ModalTarefa({
       prioridade,
       coluna: tarefa?.coluna || coluna,
     });
-    onFechar();
   }
   if (!aberto) return null;
 

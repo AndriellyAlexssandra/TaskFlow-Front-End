@@ -22,8 +22,7 @@ function ListaTarefas({
               cidade={tarefa.cidade}
               onDeletar={() => onDeletar(tarefa.id)}
               onEditar={onEditar ? () => onEditar(tarefa) : undefined}
-              onMover={
-              onMover ? (novaColuna) => onMover(tarefa.id, novaColuna) : null}
+              onMover={onMover ? (novaColuna) => onMover(tarefa.id, novaColuna) : undefined}
               colunaAnterior={colunaAnterior}
               colunaProxima={colunaProxima}
             />

@@ -24,7 +24,7 @@ function TarefaItem({
   return (
     <li onDoubleClick={onEditar}>
       <div className={styles.linhaPrincipal}>
-        <span className={styles.textoTarefa} onDoubleClick={onEditar}>
+        <span className={styles.textoTarefa}>
           {texto}
         </span>
         <div className={styles.acoes}>
@@ -34,7 +34,7 @@ function TarefaItem({
               className={styles.btnMover}
               onClick={(event) => {
                 event.stopPropagation();
-                onMover(colunaAnterior);
+                onMover && onMover(colunaAnterior);
               }}
               title={`Mover para ${colunaAnterior}`}
             >
@@ -47,7 +47,7 @@ function TarefaItem({
               className={styles.btnMover}
               onClick={(event) => {
                 event.stopPropagation();
-                onMover(colunaProxima);
+                onMover && onMover(colunaProxima);
               }}
               title={`Mover para ${colunaProxima}`}
             >

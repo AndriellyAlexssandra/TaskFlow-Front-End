@@ -21,7 +21,6 @@ function Kanban() {
         setCarregando(true);
         setErro("");
         const resposta = await api.get("/tarefas");
-        console.log(resposta.data);
         setTarefas(resposta.data);
       } catch (e) {
         setErro("Erro ao carregar tarefas. Verifique a conexão.");
@@ -41,7 +40,7 @@ function Kanban() {
   async function salvarTarefa(dados) {
     if (dados.id === undefined) {
       try {
-        const resposta = await api.post('/tarefas', dados);
+        const resposta = await api.post("/tarefas", dados);
         setTarefas([...tarefas, resposta.data]);
         setModalAberto(false);
       } catch (err) {
@@ -59,10 +58,14 @@ function Kanban() {
       }
     }
   }
-  
+
   async function moverTarefa(id, novaColuna) {
     try {
-      const resposta = await api.put(`/tarefas/${id}`, { coluna: novaColuna });
+      const tarefaAtual = tarefas.find((t) => t.id === id);
+      const resposta = await api.put(`/tarefas/${id}`, {
+        ...tarefaAtual,
+        coluna: novaColuna,
+      });
       const tarefaMovida = resposta.data;
 
       setTarefas((tarefasAtuais) =>
@@ -119,6 +122,7 @@ function Kanban() {
 
   function abrirModalEditar(tarefa) {
     setTarefaEditando(tarefa);
+    setColunaAtiva(tarefa.coluna);
     setModalAberto(true);
   }
 
@@ -172,7 +176,7 @@ function Kanban() {
           </button>
         </section>
 
-        {!carregando && !erro && (
+        {!carregando && (
           <div className="kanban-quadro">
             <div className="kanban-coluna">
               <div className="kanban-coluna-header">
@@ -284,6 +288,7 @@ function Kanban() {
 
       {modalAberto && (
         <ModalTarefa
+          aberto={modalAberto}
           tarefa={tarefaEditando}
           colunaAtiva={colunaAtiva}
           onSalvar={salvarTarefa}
