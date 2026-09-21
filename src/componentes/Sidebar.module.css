@@ -44,12 +44,10 @@
   color: #32dbe7;
   font-weight: 700;
 }
-
 .app-layout {
   display: flex;
   min-height: 100vh;
 }
-
 .app-conteudo {
   margin-left: 220px;
   flex: 1;

@@ -35,9 +35,9 @@ function Sidebar() {
         </button>}}
         */}
       <div className="sidebar-usuario">
-        <span>Olá, {usuario?.nome ?? "Usuario"}</span>
-        <button className="btn-longout" onClick={handleLogout} >Sair</button>
+        <span>Olá, {usuario?.nome ?? "Usuario"}! Seja bem vindo(a)❤️</span>
       </div>
+      <button className="btn-longout" onClick={handleLogout}>Sair</button>
     </aside>
   );
 }

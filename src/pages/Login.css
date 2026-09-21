@@ -73,11 +73,16 @@
   border-color: #2da0a8;
   border-style: groove 6px;
   padding: 12px;
-  margin-top: 50px;
+  margin-top: 500px;
 }
 .btn-longout:hover {
   background-color: #02cad8;
   border-color: #048d97;
+}
+.sidebar-usuario{
+  color:#cacaca;
+  font-style: italic;
+  font-size: 13px;
 }
 .login-aviso {
   color: #334155;
