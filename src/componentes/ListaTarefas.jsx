@@ -1,4 +1,5 @@
 import TarefaItem from "./TarefaItem.jsx";
+
 function ListaTarefas({
   tarefas,
   onEditar,

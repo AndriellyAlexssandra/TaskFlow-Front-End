@@ -23,8 +23,8 @@ function Login() {
       console.log(resposta);
        const { token, usuario } = resposta.data;
 
-// console.log("token: ", resposta.data.token)
-// console.log(resposta.data.usuario)
+  // console.log("token: ", resposta.data.token)
+  // console.log(resposta.data.usuario)
 
       login(usuario, token);
       navigate("/");

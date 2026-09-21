@@ -42,7 +42,6 @@ function Kanban() {
       try {
         const resposta = await api.post("/tarefas", dados);
         setTarefas([...tarefas, resposta.data]);
-        setModalAberto(false);
       } catch (err) {
         setErro("Erro ao criar tarefa. Tente novamente.");
         console.error(err);
@@ -51,7 +50,6 @@ function Kanban() {
       try {
         const resposta = await api.put(`/tarefas/${dados.id}`, dados);
         setTarefas(tarefas.map((t) => (t.id === dados.id ? resposta.data : t)));
-        setModalAberto(false);
       } catch (err) {
         setErro("Erro ao editar tarefa. Tente novamente.");
         console.error(err);
@@ -61,10 +59,12 @@ function Kanban() {
 
   async function moverTarefa(id, novaColuna) {
     try {
-      const tarefaAtual = tarefas.find((t) => t.id === id);
+      const tarefa = tarefas.find((t) => t.id === id);
       const resposta = await api.put(`/tarefas/${id}`, {
-        ...tarefaAtual,
-        coluna: novaColuna,
+        texto: tarefa.texto,
+        prioridade: tarefa.prioridade,
+        concluida: tarefa.concluida,
+        coluna: novaColuna 
       });
       const tarefaMovida = resposta.data;
 
@@ -220,7 +220,7 @@ function Kanban() {
                   <span className="kanban-contador">
                     {tarefasPorColuna("andamento").length}
                   </span>
-                  <button
+                 <button
                     className="kanban-btn-add"
                     onClick={() => abrirModalCriar("andamento")}
                   >
