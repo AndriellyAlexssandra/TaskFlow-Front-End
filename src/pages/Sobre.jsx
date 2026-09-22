@@ -4,14 +4,16 @@ function Sobre() {
   return (
     <div className={styles.pagina}>
       <div className={styles.tituloDescricao}>
-        <h1>Sobre o Taskflow</h1>
-        <p>
-          O TaskFlow, ou Fluxo de Tarefas, é uma aplicação desenvolvida com o
+        <h1>Sobre o Mini Kanban</h1>
+        <p>O Mini Kanban é uma aplicação desenvolvida com o
           objetivo de auxiliar na organização, no acompanhamento e no
           gerenciamento de atividades de forma visual e estruturada. O sistema
           utiliza o conceito de Kanban, uma metodologia de gerenciamento que
           representa as tarefas por meio de cartões distribuídos em diferentes
-          etapas de um fluxo de trabalho. A proposta do TaskFlow é proporcionar
+          etapas de um fluxo de trabalho.
+          </p>
+
+          <p> A proposta do TaskFlow/Mini Kanban é proporcionar
           ao usuário uma visão clara do andamento de suas atividades, permitindo
           identificar rapidamente quais tarefas ainda precisam ser realizadas,
           quais estão em desenvolvimento e quais já foram concluídas. Dessa
@@ -21,7 +23,7 @@ function Sobre() {
       </div>
 
       <div className={styles.card}>
-        <h3>O que o TaskFlow Faz</h3>
+        <h3><strong>O que o Mini Kanban Faz</strong></h3>
         <div className={styles.listaFuncoes}>
           <p><strong>Adicionar tarefas:</strong> permite cadastrar novas atividades no quadro.</p>
           <p><strong>Editar tarefas:</strong> possibilita alterar informações das atividades.</p>
