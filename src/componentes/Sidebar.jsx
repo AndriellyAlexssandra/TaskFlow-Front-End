@@ -27,7 +27,7 @@ function Sidebar({ aberta, onAlternar }) {
       </button>
 
       <div className={styles.logo}>
-        <h1>Início</h1>
+        <h1>Painel</h1>
       </div>
       <nav className={styles.nav}>
         {usuario && (
@@ -35,11 +35,10 @@ function Sidebar({ aberta, onAlternar }) {
         )}
         <NavLink to="/sobre" className={linkClass}>Sobre</NavLink>
       </nav>
-
-      <div className={styles.rodape}>
         <div className={styles.usuario}>
           <span>Olá, {usuario?.nome ?? "Usuario"}! Seja bem vindo(a)❤️</span>
         </div>
+      <div className={styles.rodape}>
         <button className="btn-longout" onClick={handleLogout}>Sair</button>
       </div>
     </aside>
