@@ -5,47 +5,69 @@
 }
 body {
   font-family: "Poppins", Arial, sans-serif;
-  background-color: #0a0e17;
-  color: #e8f0ff;
+  background-color: #101014;
+  color: #f2f2f7;
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
 }
+
+button, input, select {
+  font-family: inherit;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid #f47920;
+  outline-offset: 2px;
+}
+
 main {
-  max-width: 1100px;
-  margin: 20px auto;
-  padding: 24px 20px;
   flex: 1;
   width: 100%;
-  background-color: #131a2b;
-  border: 1px solid rgba(0, 240, 255, 0.15);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  padding: 0 32px 32px;
+  background: transparent;
 }
 main.container {
-  max-width: 1700px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px 40px;
 }
+
 #filtros {
   display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin: 32px 0 24px;
 }
 .btn-filtro {
-  padding: 8px 16px;
-  background-color: transparent;
-  color: #304d64;
-  border: 1px solid #263e52;
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  background-color: #16161d;
+  color: #9a9aa5;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 24px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+.btn-filtro:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #f2f2f7;
 }
 .btn-filtro.ativo {
-  background-color: rgba(0, 238, 255, 0.021);
-  color: #00f0ff;
-  border-color: #386896;
-  font-weight: bold;
+  background-color: rgba(91, 62, 150, 0.18);
+  color: #b9a3e3;
+  border-color: #5b3e96;
+  font-weight: 700;
 }
+
 #lista-tarefas {
   list-style: none;
   display: flex;
@@ -53,82 +75,88 @@ main.container {
   gap: 8px;
   min-width: 0;
 }
+
 .kanban-quadro {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  margin-top: 24px;
-  padding-bottom: 32px;
-  overflow-x: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 1080px;
+  gap: 20px;
+  align-items: start;
+  padding-bottom: 40px;
 }
+
 .kanban-coluna {
-  flex: 1;
-  min-width: 300px;
+  min-width: 0;
   overflow: hidden;
-  background-color: #1b2a3b;
-  border: 1px solid #1e3a5f;
-  border-radius: 8px;
-  padding: 12px;
+  background-color: #16161d;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 16px;
+  transition: border-color 0.2s ease;
 }
+.kanban-coluna:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
 .kanban-coluna-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #334155;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 .kanban-coluna-header h2 {
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: #9a9aa5;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
-.kanban-coluna:nth-child(1) {
-  border-top: 2px solid #835962;
-}
-.kanban-coluna:nth-child(2) {
-  border-top: 2px solid #5b8492;
-}
-.kanban-coluna:nth-child(3) {
-  border-top: 2px solid #478058;
-}
+
+.kanban-coluna:nth-child(1) { border-top: 3px solid #4fc3f0; }
+.kanban-coluna:nth-child(2) { border-top: 3px solid #f47920; }
+.kanban-coluna:nth-child(3) { border-top: 3px solid #5b3e96; }
+
+.kanban-coluna:nth-child(1) .kanban-contador { background: rgba(79, 195, 240, 0.15); color: #4fc3f0; }
+.kanban-coluna:nth-child(2) .kanban-contador { background: rgba(244, 121, 32, 0.15); color: #f47920; }
+.kanban-coluna:nth-child(3) .kanban-contador { background: rgba(91, 62, 150, 0.25); color: #b9a3e3; }
 
 .kanban-coluna-header-acoes {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
 }
 .kanban-contador {
-  background-color: #334155;
-  color: #94a3b8;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 1px 7px;
+  padding: 2px 8px;
   border-radius: 10px;
   min-width: 20px;
   text-align: center;
 }
+
 .kanban-btn-add {
-  background-color: #334155;
-  color: #94a3b8;
-  border: 1px solid #808388;
-  border-radius: 6px;
-  width: 24px;
-  height: 24px;
-  font-size: 15px;
+  background-color: #1c1c25;
+  color: #9a9aa5;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 7px;
+  width: 26px;
+  height: 26px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.15s ease;
 }
 .kanban-btn-add:hover {
-  background-color: #33f5ff;
-  color: #525964;
-  border: 1px solid #2ec1c9;
+  background-color: #f47920;
+  color: #fff;
+  border-color: #f47920;
+  transform: translateY(-1px);
 }
 
 .kanban-btn-limpar {
@@ -136,34 +164,40 @@ main.container {
   border: none;
   cursor: pointer;
   padding: 4px;
+  border-radius: 7px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.15s ease;
+}
+.kanban-btn-limpar:hover {
+  background-color: rgba(255, 46, 99, 0.12);
 }
 .icon-trash {
-  width: 20px;
-  height: 21px;
+  width: 18px;
+  height: 19px;
   object-fit: contain;
-  opacity: 0.8;
-  transition:
-    transform 0.2s ease,
-    opacity 0.2s ease;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
 }
+.kanban-btn-limpar:hover .icon-trash {
+  opacity: 1;
+}
+
 .msg-vazia {
-  color: #385a75;
-  font-size: 12px;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  color: #6b6b76;
+  font-size: 12.5px;
+  text-align: center;
+  padding: 24px 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
 }
+
 footer {
   text-align: center;
-  padding: 12px;
+  padding: 16px;
   font-size: 11px;
-  color: #4a5578;
-  border-top: 1px solid #263352;
+  color: #6b6b76;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
   margin-top: auto;
 }

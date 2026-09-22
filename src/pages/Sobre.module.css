@@ -1,23 +1,76 @@
-.tituloDescricao h1{
-    color: rgb(56, 255, 255);
+.pagina {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 56px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
-.tituloDescricao p{
-    font-size: 15px;
-    color:rgb(160, 159, 158);
+
+.tituloDescricao h1 {
+  color: #f47920;
+  font-family: "Poppins", Arial, sans-serif;
+  font-size: 2rem;
+  margin-bottom: 16px;
 }
-.texto h3{
-    color:rgb(208, 216, 216);
+.tituloDescricao p {
+  font-size: 15px;
+  color: #9a9aa5;
+  line-height: 1.8;
 }
-.texto {
-    font-size: 16px;
-    display: column;
-    
-    color:rgb(160, 159, 158);
+
+.card {
+  background: #16161d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 24px 28px;
 }
-.p{
-    margin: 0 0 3px;
+.card h3 {
+  color: #4fc3f0;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
 }
-.tecnologias li{
-    list-style: none;
-    color: rgb(205, 205, 206);
+.card h4 {
+  color: #a78bd8;
+  font-size: 1.05rem;
+  margin-bottom: 14px;
+}
+
+.listaFuncoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.listaFuncoes p {
+  font-size: 14.5px;
+  color: #b8b8c2;
+  line-height: 1.6;
+}
+.listaFuncoes strong {
+  color: #f2f2f7;
+}
+
+.tecnologias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+}
+.tecnologias li {
+  color: #cdcdd6;
+  background: rgba(244, 121, 32, 0.1);
+  border: 1px solid rgba(244, 121, 32, 0.3);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13.5px;
+}
+
+.rodape {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 12px;
+  padding-top: 20px;
+  color: #6b6b76;
+  font-size: 0.8rem;
+  text-align: center;
+  line-height: 1.6;
 }

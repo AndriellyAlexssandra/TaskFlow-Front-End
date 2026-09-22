@@ -62,6 +62,7 @@ function ModalTarefa({
       texto,
       cidade,
       prioridade,
+      concluida: tarefa?.concluida ?? false,
       coluna: tarefa?.coluna || coluna,
     });
     onFechar();
@@ -89,7 +90,8 @@ function ModalTarefa({
         />
         {cidade && <p className={styles.cidade}>{cidade}</p>}
 
-        <select className="sel-prioridade"
+        <select
+          className="sel-prioridade"
           value={prioridade}
           onChange={(e) => setPrioridade(e.target.value)}
         >

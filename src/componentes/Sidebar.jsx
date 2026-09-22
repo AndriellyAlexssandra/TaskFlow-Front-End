@@ -4,7 +4,7 @@ import styles from "./Sidebar.module.css";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-function Sidebar() {
+function Sidebar({ aberta, onAlternar }) {
   const { usuario, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -14,30 +14,34 @@ function Sidebar() {
   }
   const linkClass = ({ isActive }) =>
     isActive ? styles.link + " " + styles.ativo : styles.link;
+
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} ${aberta ? "" : styles.fechada}`}>
+      <button
+        type="button"
+        className={styles.btnToggle}
+        onClick={onAlternar}
+        title={aberta ? "Recolher menu" : "Abrir menu"}
+      >
+        {aberta ? "‹" : "›"}
+      </button>
+
       <div className={styles.logo}>
-        <h1>Taskflow🚀</h1>
+        <h1>Início</h1>
       </div>
       <nav className={styles.nav}>
         {usuario && (
-          <NavLink to="/" className={linkClass}>
-            Dashboard
-          </NavLink>
+          <NavLink to="/" className={linkClass}>Dashboard</NavLink>
         )}
-        <NavLink to="/sobre" className={linkClass}>
-          Sobre
-        </NavLink>
+        <NavLink to="/sobre" className={linkClass}>Sobre</NavLink>
       </nav>
-      {/*{usuario && (
-        <button className="btn-longout" onClick={logout}>
-          Sair
-        </button>}}
-        */}
-      <div className="sidebar-usuario">
-        <span>Olá, {usuario?.nome ?? "Usuario"}! Seja bem vindo(a)❤️</span>
+
+      <div className={styles.rodape}>
+        <div className={styles.usuario}>
+          <span>Olá, {usuario?.nome ?? "Usuario"}! Seja bem vindo(a)❤️</span>
+        </div>
+        <button className="btn-longout" onClick={handleLogout}>Sair</button>
       </div>
-      <button className="btn-longout" onClick={handleLogout}>Sair</button>
     </aside>
   );
 }

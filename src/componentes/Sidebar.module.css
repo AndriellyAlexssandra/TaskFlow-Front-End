@@ -1,55 +1,99 @@
 .sidebar {
   width: 220px;
-  min-height: 100vh;
-  background-color: #0d1b2a;
-  padding: 24px 16px;
+  height: 100vh;
+  background-color: #16161d;
+  padding: 28px 18px;
   position: fixed;
   top: 0;
   left: 0;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 36px;
+  z-index: 100;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  transition: transform 0.25s ease;
 }
-
+.fechada {
+  transform: translateX(-100%);
+}
 .logo h1 {
-  color: #00f0ff;
-  font-size: 1.4rem;
-  font-family: "Poppins", Arial;
+  color: #f47920;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
-
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
-
 .link {
-  color: #94a3b8;
+  display: block;
+  color: #9a9aa5;
   text-decoration: none;
   padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
 }
-
 .link:hover {
-  background-color: #1b2a3b;
-  color: #e2e8f0;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #f2f2f7;
 }
-
 .ativo {
-  background-color: #1e3a5f;
-  color: #32dbe7;
+  background: linear-gradient(90deg, rgba(91, 62, 150, 0.35), rgba(91, 62, 150, 0.08));
+  color: #c3aef0;
   font-weight: 700;
+  border-left: 2px solid #5b3e96;
+  padding-left: 12px;
 }
-.app-layout {
+.btnToggle {
+  position: absolute;
+  top: 26px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #5b3e96;
+  background: #16161d;
+  color: #c3aef0;
+  font-size: 16px;
+  cursor: pointer;
   display: flex;
-  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
 }
-.app-conteudo {
-  margin-left: 220px;
-  flex: 1;
-  min-width: 0;
+.btnToggle:hover {
+  background: #5b3e96;
+  color: #fff;
+}
+.fechada .btnToggle { right: -40px; }
+
+.rodape {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.usuario {
+  color: #9a9aa5;
+  font-style: italic;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.btnSair {
+  background: transparent;
+  border: 1px solid #f47920;
+  color: #f47920;
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btnSair:hover {
+  background: #f47920;
+  color: #101014;
 }

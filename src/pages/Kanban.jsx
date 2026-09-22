@@ -38,6 +38,7 @@ function Kanban() {
   }, [tarefas]);
 
   async function salvarTarefa(dados) {
+    
     if (dados.id === undefined) {
       try {
         const resposta = await api.post("/tarefas", dados);
@@ -64,7 +65,7 @@ function Kanban() {
         texto: tarefa.texto,
         prioridade: tarefa.prioridade,
         concluida: tarefa.concluida,
-        coluna: novaColuna 
+        coluna: novaColuna,
       });
       const tarefaMovida = resposta.data;
 
@@ -129,8 +130,8 @@ function Kanban() {
   return (
     <div id="Kanban">
       <Header
-        titulo="TaskFlow🚀"
-        subtitulo="Bem vindo(a), Coloque sua rotina em ordem em um clique!"
+        titulo="Mine Kanban"
+        subtitulo="Bem-vindo(a)! Organize sua rotina de forma simples e rápida."
         total={totalTarefas}
         pendentes={pendentes}
         concluidas={concluidas}
@@ -220,7 +221,7 @@ function Kanban() {
                   <span className="kanban-contador">
                     {tarefasPorColuna("andamento").length}
                   </span>
-                 <button
+                  <button
                     className="kanban-btn-add"
                     onClick={() => abrirModalCriar("andamento")}
                   >
@@ -290,7 +291,7 @@ function Kanban() {
         <ModalTarefa
           aberto={modalAberto}
           tarefa={tarefaEditando}
-          colunaAtiva={colunaAtiva}
+          coluna={colunaAtiva}
           onSalvar={salvarTarefa}
           onFechar={() => setModalAberto(false)}
         />
