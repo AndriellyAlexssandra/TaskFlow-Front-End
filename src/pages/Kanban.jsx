@@ -15,9 +15,24 @@ function Kanban() {
   const [tarefaEditando, setTarefaEditando] = useState(null);
   const [colunaAtiva, setColunaAtiva] = useState("afazer");
 
+  const [listaPrioridades, setListaPrioridades] = useState([]);
+  const [listaUsuarios, setListaUsuarios] = useState([]);
+  const [listaProjetos, setListaProjetos] = useState([]);
+
   useEffect(() => {
     async function carregarTarefas() {
       try {
+        const [respPrioridades, respTarefas, respUsuarios, respProjetos] =
+          await Promise.all([
+            api.get("/prioridades"),
+            api.get("/tarefas"),
+            api.get("/usuarios"),
+            api.get("/projetos"),
+          ]);
+        setTarefas(respTarefas.data);
+        setListaPrioridades(respPrioridades.data);
+        setListaUsuarios(respUsuarios.data);
+        setListaProjetos(respProjetos.data);
         setCarregando(true);
         setErro("");
         const resposta = await api.get("/tarefas");
@@ -38,7 +53,6 @@ function Kanban() {
   }, [tarefas]);
 
   async function salvarTarefa(dados) {
-    
     if (dados.id === undefined) {
       try {
         const resposta = await api.post("/tarefas", dados);
@@ -206,6 +220,7 @@ function Kanban() {
               </div>
               <ListaTarefas
                 tarefas={tarefasPorColuna("afazer")}
+                prioridades={listaPrioridades}
                 onDeletar={deletarTarefa}
                 onMover={moverTarefa}
                 colunaAnterior={null}
@@ -241,6 +256,7 @@ function Kanban() {
               </div>
               <ListaTarefas
                 tarefas={tarefasPorColuna("andamento")}
+                prioridades={listaPrioridades}
                 onDeletar={deletarTarefa}
                 onMover={moverTarefa}
                 colunaAnterior="afazer"
@@ -276,6 +292,7 @@ function Kanban() {
               </div>
               <ListaTarefas
                 tarefas={tarefasPorColuna("concluido")}
+                prioridades={listaPrioridades}
                 onDeletar={deletarTarefa}
                 onMover={moverTarefa}
                 colunaAnterior="andamento"
@@ -292,6 +309,9 @@ function Kanban() {
           aberto={modalAberto}
           tarefa={tarefaEditando}
           coluna={colunaAtiva}
+          prioridades={listaPrioridades}
+          usuarios={listaUsuarios}
+          projetos={listaProjetos}
           onSalvar={salvarTarefa}
           onFechar={() => setModalAberto(false)}
         />
