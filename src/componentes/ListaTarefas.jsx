@@ -1,7 +1,10 @@
 import TarefaItem from "./TarefaItem.jsx";
 
+const CLASSE_PRIORIDADE = { 1: "baixa", 2: "media", 3: " alta" };
+
 function ListaTarefas({
   tarefas,
+  prioridades = [],
   onEditar,
   onDeletar,
   onMover = null,
@@ -15,19 +18,26 @@ function ListaTarefas({
       )}
       {tarefas.length > 0 && (
         <ul id="lista-tarefas">
-          {tarefas.map((tarefa) => (
+          {tarefas.map((tarefa) => {
+            const prioridade = prioridades.find(
+              (p) => p.id === tarefa.idprioridade,
+            );
             <TarefaItem
               key={tarefa.id}
               texto={tarefa.texto}
-              prioridade={tarefa.prioridade}
-              cidade={tarefa.cidade}
+              prioridade={CLASSE_PRIORIDADE[tarefa.idprioridade] || "media"}
+              rotuloPrioridade={prioridade?.descricao}
               onDeletar={() => onDeletar(tarefa.id)}
               onEditar={onEditar ? () => onEditar(tarefa) : undefined}
-              onMover={onMover ? (novaColuna) => onMover(tarefa.id, novaColuna) : undefined}
+              onMover={
+                onMover
+                  ? (novaColuna) => onMover(tarefa.id, novaColuna)
+                  : undefined
+              }
               colunaAnterior={colunaAnterior}
               colunaProxima={colunaProxima}
-            />
-          ))}
+            />;
+          })}
         </ul>
       )}
     </section>

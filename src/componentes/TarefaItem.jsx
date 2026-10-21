@@ -11,12 +11,12 @@ const lixeirasPorPrioridade = {
 function TarefaItem({
   texto,
   prioridade = "media",
+  rotuloPrioridade = "",
   onDeletar,
   onEditar,
   onMover = null,
   colunaAnterior = null,
   colunaProxima = null,
-  cidade = "",
 }) {
   const classePrioridade =
     styles["badge-prioridade"] + " " + styles["badge-" + prioridade];
@@ -24,9 +24,7 @@ function TarefaItem({
   return (
     <li onDoubleClick={onEditar}>
       <div className={styles.linhaPrincipal}>
-        <span className={styles.textoTarefa}>
-          {texto}
-        </span>
+        <span className={styles.textoTarefa}>{texto}</span>
         <div className={styles.acoes}>
           {colunaAnterior && (
             <button
@@ -58,8 +56,9 @@ function TarefaItem({
       </div>
 
       <div className={styles.linhaSegundaria}>
-        <span className={classePrioridade}>{prioridade}</span>
-        {cidade && <span className={styles.cidade}>📍{cidade}</span>}
+        <span className={classePrioridade}>
+          {rotuloPrioridade || prioridade}
+        </span>
 
         <button
           className={styles.btnDeletar}

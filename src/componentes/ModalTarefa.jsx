@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import styles from "./ModalTarefa.module.css";
-import axios from "axios";
+
+import { mensagensdeErro } from "../api";
+import { useAuth } from "../contexts/AuthContext";
+
+function paraNumero(valor) {
+  return valor ? Number(valor) : null;
+}
 
 function ModalTarefa({
   aberto,
@@ -8,22 +14,30 @@ function ModalTarefa({
   onSalvar,
   tarefa = null,
   coluna = "afazer",
+  prioridades = [],
+  usuarios = [],
+  projetos = [],
 }) {
-  const [texto, setTexto] = useState("");
-  const [cep, setCep] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [prioridade, setPrioridade] = useState("media");
+const { usuario } = useAuth();
+const [texto, setTexto] = useState("");
+const [idPrioridade, setIdPrioridade] = useState(2);
+const [idUsuario, setIdUsuario] = useState("");
+const [idProjeto, setIdProjeto] = useState("");
+const [erros, setErros] = useState([]);
+const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
+    setErros([]);
     if (tarefa) {
       setTexto(tarefa.texto);
-      setCidade(tarefa.cidade || "");
-      setPrioridade(tarefa.prioridade);
+      setIdPrioridade(tarefa.prioridade_id);
+      setIdUsuario(tarefa.usuario_id);
+      setIdProjeto(tarefa.projeto_id);
     } else {
       setTexto("");
-      setCep("");
-      setCidade("");
-      setPrioridade("media");
+      setIdPrioridade(2);
+      setIdUsuario(usuario?.id || usuarios[0]?.id || "");
+      setIdProjeto(projetos[0]?.id || "");
     }
   }, [tarefa, aberto]);
 
@@ -39,69 +53,96 @@ function ModalTarefa({
     };
   }, [aberto, onFechar]);
 
-  async function buscarCidade(cepDigitado) {
-    const cepLimpo = cepDigitado.replace(/\D/g, "");
-    if (cepLimpo.length !== 8) return;
-
-    try {
-      const { data } = await axios.get(
-        `https://viacep.com.br/ws/${cepLimpo}/json/`,
-      );
-      if (!data.erro) setCidade(data.localidade + "/" + data.uf);
-    } catch (e) {
-      console.log("CEP não encontrado ou inválido", e);
-      setCidade("");
-    }
-  }
-
-  function handleSalvar() {
+  async function handleSalvar() {
     if (texto.trim() === "") return;
-
-    onSalvar({
-      id: tarefa?.id,
-      texto,
-      cidade,
-      prioridade,
-      concluida: tarefa?.concluida ?? false,
-      coluna: tarefa?.coluna || coluna,
-    });
-    onFechar();
+    setErros([]);
+    setSalvando(true);
+    try {
+      await onSalvar({
+        ...tarefa,
+        id: tarefa?.id,
+        texto,
+        coluna: tarefa?.coluna || coluna,
+        prioridade_id: paraNumero(idPrioridade),
+        usuario_id: paraNumero(idUsuario),
+        projeto_id: paraNumero(idProjeto),
+      });
+      onFechar();
+    } catch (e) {
+      setErros(mensagensdeErro(e));
+    } finally {
+      setSalvando(false);
+    }
   }
   if (!aberto) return null;
 
   return (
-    <div className={styles.overlay} onClick={onFechar}>
-      <div className={styles.card} onClick={(e) => e.stopPropagation()}>
-        <h2>{tarefa ? "Editar tarefa" : "Incluir Tarefa"}</h2>
+    //<div className={styles.overlay} onClick={onFechar}>
+    <div className={styles.card} onClick={(e) => e.stopPropagation()}>
+      <h2>{tarefa ? "Editar tarefa" : "Incluir Tarefa"}</h2>
+      <div className={styles.campo}>
+        <label htmlFor="tarefa-texto">Tarefa</label>
         <input
           placeholder="Texto da tarefa"
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
         />
+        <div className={styles.campo}>
+          <label htmlFor="tarefa-responsavel">Responsável</label>
+          <select
+            id="tarefa-responsavel"
+            value={idUsuario}
+            onChange={(e) => setIdUsuario(e.target.value)}
+          >
+            {usuarios.map((usuario) => (
+              <option key={usuario.id} value={usuario.id}>
+                {usuario.nome}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <input
-          placeholder="CEP(opcional)"
-          value={cep}
-          onChange={(e) => {
-            setCep(e.target.value);
-            buscarCidade(e.target.value);
-          }}
-          maxLength={9}
-        />
-        {cidade && <p className={styles.cidade}>{cidade}</p>}
+        <div className={styles.campo}>
+          <label htmlFor="tarefa-prioridade">Prioridades</label>
+          <select
+            id="tarefa-prioridade"
+            value={idPrioridade}
+            onChange={(e) => setIdPrioridade(e.target.value)}
+          >
+            {prioridades.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.descricao}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <select
-          className="sel-prioridade"
-          value={prioridade}
-          onChange={(e) => setPrioridade(e.target.value)}
-        >
-          <option value="alta">🔴Alta</option>
-          <option value="media">🟡Média</option>
-          <option value="baixa">🟢Baixa</option>
-        </select>
+        <div className={styles.campo}>
+          <label htmlFor="tarefa-projeto">Projetos</label>
+          <select
+            id="tarefa-projeto"
+            value={idProjeto}
+            onChange={(e) => setIdProjeto(e.target.value)}
+          >
+            {projetos.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.nome}
+              </option>
+            ))}
+          </select>
+        </div>
+        {erros.length > 0 && (
+          <ul className={styles.erros}>
+            {erros.map((mensagem, i) => (
+              <li key={i}>{mensagem}</li>
+            ))}
+          </ul>
+        )}
         <div className={styles.botoes}>
           <button onClick={onFechar}>Cancelar</button>
-          <button onClick={handleSalvar}>Salvar</button>
+          <button onClick={handleSalvar} disabled={salvando}>
+            {salvando ? "Salvando..." : "Salvar"}
+          </button>
         </div>
       </div>
     </div>

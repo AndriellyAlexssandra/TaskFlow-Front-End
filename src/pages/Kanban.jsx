@@ -1,4 +1,4 @@
-import api from "../api";
+import api, { mensagensdeErro } from "../api";
 import Header from "../componentes/Header.jsx";
 import ListaTarefas from "../componentes/ListaTarefas.jsx";
 import ModalTarefa from "../componentes/ModalTarefa.jsx";
@@ -54,41 +54,49 @@ function Kanban() {
 
   async function salvarTarefa(dados) {
     if (dados.id === undefined) {
-      try {
+      const resposta = await api.put(`/tarefas/${dados.id}`, dados);
+      setTarefas(tarefas.map((t) => (t.id === dados.id ? resposta.data :
+      t)));
+      } else {
+        const resposta = await api.post("/tarefas", dados);
+        setTarefas([...tarefas, resposta.data]);
+      }
+      /*      try {
         const resposta = await api.post("/tarefas", dados);
         setTarefas([...tarefas, resposta.data]);
       } catch (err) {
         setErro("Erro ao criar tarefa. Tente novamente.");
-        console.error(err);
-      }
-    } else {
+        console.error(err);*/
+      
+    /*} else {
       try {
         const resposta = await api.put(`/tarefas/${dados.id}`, dados);
         setTarefas(tarefas.map((t) => (t.id === dados.id ? resposta.data : t)));
       } catch (err) {
         setErro("Erro ao editar tarefa. Tente novamente.");
         console.error(err);
-      }
+      }*/
     }
-  }
-
+  
   async function moverTarefa(id, novaColuna) {
     try {
       const tarefa = tarefas.find((t) => t.id === id);
-      const resposta = await api.put(`/tarefas/${id}`, {
+      const resposta = await api.put(`/tarefas/${id}`,{ ...tarefa, coluna: novaColuna }); 
+      
+      /*{
         texto: tarefa.texto,
         prioridade: tarefa.prioridade,
         concluida: tarefa.concluida,
         coluna: novaColuna,
-      });
+      });*/
+
       const tarefaMovida = resposta.data;
 
       setTarefas((tarefasAtuais) =>
         tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
       );
     } catch (e) {
-      setErro("Erro ao mover tarefa. Tente novamente.");
-      console.error(e);
+    alert(mensagensdeErro(e).join("\n"));
     }
   }
 
@@ -102,8 +110,7 @@ function Kanban() {
       await api.delete(`/tarefas/${id}`);
       setTarefas((tarefasAtuais) => tarefasAtuais.filter((t) => t.id !== id));
     } catch (e) {
-      setErro("Erro ao deletar tarefa. Tente novamente.");
-      console.error(e);
+      alert(mensagensdeErro(e).join("\n"));
     }
   }
 

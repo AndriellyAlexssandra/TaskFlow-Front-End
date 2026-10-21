@@ -7,7 +7,7 @@ import "./Login.css";
 function Login() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [senha_hash, setSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [erro, setErro] = useState("");
   const [shake, setShake] = useState(false);
@@ -17,7 +17,7 @@ function Login() {
   async function handleLogin() {
     setErro("");
     try {
-      const resposta = await api.post("/auth/login", { email, senha });
+      const resposta = await api.post("/auth/login", { email, senha_hash});
       const { token, usuario } = resposta.data;
       login(usuario, token);
       navigate("/");
@@ -63,7 +63,7 @@ function Login() {
           <input
             type={mostrarSenha ? "text" : "password"}
             placeholder="Senha"
-            value={senha}
+            value={senha_hash}
             onChange={(e) => setSenha(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLogin()}
           />
