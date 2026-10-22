@@ -53,30 +53,16 @@ function Kanban() {
   }, [tarefas]);
 
   async function salvarTarefa(dados) {
-    if (dados.id === undefined) {
-      const resposta = await api.put(`/tarefas/${dados.id}`, dados);
-      setTarefas(tarefas.map((t) => (t.id === dados.id ? resposta.data :
-      t)));
-      } else {
-        const resposta = await api.post("/tarefas", dados);
-        setTarefas([...tarefas, resposta.data]);
-      }
-      /*      try {
-        const resposta = await api.post("/tarefas", dados);
-        setTarefas([...tarefas, resposta.data]);
-      } catch (err) {
-        setErro("Erro ao criar tarefa. Tente novamente.");
-        console.error(err);*/
-      
-    /*} else {
-      try {
-        const resposta = await api.put(`/tarefas/${dados.id}`, dados);
-        setTarefas(tarefas.map((t) => (t.id === dados.id ? resposta.data : t)));
-      } catch (err) {
-        setErro("Erro ao editar tarefa. Tente novamente.");
-        console.error(err);
-      }*/
-    }
+  if (dados.id === undefined) {
+    const resposta = await api.post("/tarefas", dados);
+    setTarefas((tarefasAtuais) => [...tarefasAtuais, resposta.data]);
+  } else {
+    const resposta = await api.put(`/tarefas/${dados.id}`, dados);
+    setTarefas((tarefasAtuais) =>
+      tarefasAtuais.map((t) => (t.id === dados.id ? resposta.data : t)),
+    );
+  }
+}
   
   async function moverTarefa(id, novaColuna) {
     try {
@@ -123,14 +109,15 @@ function Kanban() {
     }
   };
 
-  const tarefasPorColuna = (nomeColuna) => {
-    return tarefas.filter((t) => {
-      const bateColuna = t.coluna === nomeColuna;
-      const batePrioridade =
-        filtroPrioridade === "todas" || t.prioridade === filtroPrioridade;
-      return bateColuna && batePrioridade;
-    });
-  };
+const NOME_PRIORIDADE = { 1: "baixa", 2: "media", 3: "alta" };
+
+const tarefasPorColuna = (nomeColuna) =>
+  tarefas.filter(
+    (t) =>
+      t.coluna === nomeColuna &&
+      (filtroPrioridade === "todas" ||
+        NOME_PRIORIDADE[t.prioridade_id] === filtroPrioridade),
+  );
 
   const totalTarefas = tarefas.length;
   const pendentes = tarefas.filter((t) => t.coluna !== "concluido").length;

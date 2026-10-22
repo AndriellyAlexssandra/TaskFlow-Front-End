@@ -1,6 +1,6 @@
 import TarefaItem from "./TarefaItem.jsx";
 
-const CLASSE_PRIORIDADE = { 1: "baixa", 2: "media", 3: " alta" };
+const CLASSE_PRIORIDADE = { 1: "baixa", 2: "media", 3: "alta" };
 
 function ListaTarefas({
   tarefas,
@@ -20,27 +20,31 @@ function ListaTarefas({
         <ul id="lista-tarefas">
           {tarefas.map((tarefa) => {
             const prioridade = prioridades.find(
-              (p) => p.id === tarefa.idprioridade,
+              (p) => p.id === tarefa.prioridade_id,
             );
-            <TarefaItem
-              key={tarefa.id}
-              texto={tarefa.texto}
-              prioridade={CLASSE_PRIORIDADE[tarefa.idprioridade] || "media"}
-              rotuloPrioridade={prioridade?.descricao}
-              onDeletar={() => onDeletar(tarefa.id)}
-              onEditar={onEditar ? () => onEditar(tarefa) : undefined}
-              onMover={
-                onMover
-                  ? (novaColuna) => onMover(tarefa.id, novaColuna)
-                  : undefined
-              }
-              colunaAnterior={colunaAnterior}
-              colunaProxima={colunaProxima}
-            />;
+
+            return (
+              <TarefaItem
+                key={tarefa.id}
+                texto={tarefa.texto}
+                prioridade={CLASSE_PRIORIDADE[tarefa.prioridade_id] || "media"}
+                rotuloPrioridade={prioridade?.descricao}
+                onDeletar={() => onDeletar(tarefa.id)}
+                onEditar={onEditar ? () => onEditar(tarefa) : undefined}
+                onMover={
+                  onMover
+                    ? (novaColuna) => onMover(tarefa.id, novaColuna)
+                    : undefined
+                }
+                colunaAnterior={colunaAnterior}
+                colunaProxima={colunaProxima}
+              />
+            );
           })}
         </ul>
       )}
     </section>
   );
 }
+
 export default ListaTarefas;
