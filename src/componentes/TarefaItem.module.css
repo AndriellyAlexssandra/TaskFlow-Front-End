@@ -60,14 +60,6 @@
 .badge-media { background-color: rgba(245, 166, 35, 0.15); color: #f5a623; }
 .badge-baixa { background-color: rgba(0, 230, 118, 0.15); color: #00e676; }
 
-.cidade {
-  font-size: 10px;
-  color: #9a9aa5;
-  background-color: rgba(154, 154, 165, 0.1);
-  padding: 3px 9px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
 
 .acoes {
   display: flex;
@@ -116,3 +108,26 @@
   height: 15px;
   object-fit: contain;
 }
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.8rem;
+  color: #CBD5E1;
+}
+
+.infoItem {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.infoRotulo {
+  color: #64748B;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  min-width: 92px;
+}   

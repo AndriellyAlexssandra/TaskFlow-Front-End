@@ -69,13 +69,6 @@ function Kanban() {
       const tarefa = tarefas.find((t) => t.id === id);
       const resposta = await api.put(`/tarefas/${id}`,{ ...tarefa, coluna: novaColuna }); 
       
-      /*{
-        texto: tarefa.texto,
-        prioridade: tarefa.prioridade,
-        concluida: tarefa.concluida,
-        coluna: novaColuna,
-      });*/
-
       const tarefaMovida = resposta.data;
 
       setTarefas((tarefasAtuais) =>

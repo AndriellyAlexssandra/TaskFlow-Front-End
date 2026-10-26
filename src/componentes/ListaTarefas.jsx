@@ -29,6 +29,9 @@ function ListaTarefas({
                 texto={tarefa.texto}
                 prioridade={CLASSE_PRIORIDADE[tarefa.prioridade_id] || "media"}
                 rotuloPrioridade={prioridade?.descricao}
+                corPrioridade={tarefa.prioridade_cor}
+                usuario={tarefa.usuario || 'Sem responsável'}
+                projeto={tarefa.projeto || 'Sem projetos'}
                 onDeletar={() => onDeletar(tarefa.id)}
                 onEditar={onEditar ? () => onEditar(tarefa) : undefined}
                 onMover={
