@@ -33,10 +33,7 @@ function Kanban() {
         setListaPrioridades(respPrioridades.data);
         setListaUsuarios(respUsuarios.data);
         setListaProjetos(respProjetos.data);
-        setCarregando(true);
         setErro("");
-        const resposta = await api.get("/tarefas");
-        setTarefas(resposta.data);
       } catch (e) {
         setErro("Erro ao carregar tarefas. Verifique a conexão.");
         console.error(e);
@@ -53,29 +50,32 @@ function Kanban() {
   }, [tarefas]);
 
   async function salvarTarefa(dados) {
-  if (dados.id === undefined) {
-    const resposta = await api.post("/tarefas", dados);
-    setTarefas((tarefasAtuais) => [...tarefasAtuais, resposta.data]);
-  } else {
-    const resposta = await api.put(`/tarefas/${dados.id}`, dados);
-    setTarefas((tarefasAtuais) =>
-      tarefasAtuais.map((t) => (t.id === dados.id ? resposta.data : t)),
-    );
+    if (dados.id === undefined) {
+      const resposta = await api.post("/tarefas", dados);
+      setTarefas((tarefasAtuais) => [...tarefasAtuais, resposta.data]);
+    } else {
+      const resposta = await api.put(`/tarefas/${dados.id}`, dados);
+      setTarefas((tarefasAtuais) =>
+        tarefasAtuais.map((t) => (t.id === dados.id ? resposta.data : t)),
+      );
+    }
   }
-}
-  
+
   async function moverTarefa(id, novaColuna) {
     try {
       const tarefa = tarefas.find((t) => t.id === id);
-      const resposta = await api.put(`/tarefas/${id}`,{ ...tarefa, coluna: novaColuna }); 
-      
+      const resposta = await api.put(`/tarefas/${id}`, {
+        ...tarefa,
+        coluna: novaColuna,
+      });
+
       const tarefaMovida = resposta.data;
 
       setTarefas((tarefasAtuais) =>
         tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
       );
     } catch (e) {
-    alert(mensagensdeErro(e).join("\n"));
+      alert(mensagensdeErro(e).join("\n"));
     }
   }
 
@@ -102,15 +102,15 @@ function Kanban() {
     }
   };
 
-const NOME_PRIORIDADE = { 1: "baixa", 2: "media", 3: "alta" };
+  const NOME_PRIORIDADE = { 1: "baixa", 2: "media", 3: "alta" };
 
-const tarefasPorColuna = (nomeColuna) =>
-  tarefas.filter(
-    (t) =>
-      t.coluna === nomeColuna &&
-      (filtroPrioridade === "todas" ||
-        NOME_PRIORIDADE[t.prioridade_id] === filtroPrioridade),
-  );
+  const tarefasPorColuna = (nomeColuna) =>
+    tarefas.filter(
+      (t) =>
+        t.coluna === nomeColuna &&
+        (filtroPrioridade === "todas" ||
+          NOME_PRIORIDADE[t.prioridade_id] === filtroPrioridade),
+    );
 
   const totalTarefas = tarefas.length;
   const pendentes = tarefas.filter((t) => t.coluna !== "concluido").length;
@@ -208,6 +208,8 @@ const tarefasPorColuna = (nomeColuna) =>
               <ListaTarefas
                 tarefas={tarefasPorColuna("afazer")}
                 prioridades={listaPrioridades}
+                usuarios={listaUsuarios}
+                projetos={listaProjetos}
                 onDeletar={deletarTarefa}
                 onMover={moverTarefa}
                 colunaAnterior={null}
@@ -244,6 +246,8 @@ const tarefasPorColuna = (nomeColuna) =>
               <ListaTarefas
                 tarefas={tarefasPorColuna("andamento")}
                 prioridades={listaPrioridades}
+                usuarios={listaUsuarios}
+                projetos={listaProjetos}
                 onDeletar={deletarTarefa}
                 onMover={moverTarefa}
                 colunaAnterior="afazer"
@@ -280,6 +284,8 @@ const tarefasPorColuna = (nomeColuna) =>
               <ListaTarefas
                 tarefas={tarefasPorColuna("concluido")}
                 prioridades={listaPrioridades}
+                usuarios={listaUsuarios}
+                projetos={listaProjetos}
                 onDeletar={deletarTarefa}
                 onMover={moverTarefa}
                 colunaAnterior="andamento"

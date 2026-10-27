@@ -77,16 +77,19 @@ const [salvando, setSalvando] = useState(false);
   if (!aberto) return null;
 
   return (
-    //<div className={styles.overlay} onClick={onFechar}>
-    <div className={styles.card} onClick={(e) => e.stopPropagation()}>
-      <h2>{tarefa ? "Editar tarefa" : "Incluir Tarefa"}</h2>
-      <div className={styles.campo}>
-        <label htmlFor="tarefa-texto">Tarefa</label>
-        <input
-          placeholder="Texto da tarefa"
-          value={texto}
-          onChange={(e) => setTexto(e.target.value)}
-        />
+    <div className={styles.overlay} onClick={onFechar}>
+      <div className={styles.card} onClick={(e) => e.stopPropagation()}>
+        <h2>{tarefa ? "Editar tarefa" : "Incluir Tarefa"}</h2>
+        <div className={styles.campo}>
+          <label htmlFor="tarefa-texto">Tarefa</label>
+          <input
+            id="tarefa-texto"
+            placeholder="Texto da tarefa"
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+          />
+        </div>
+
         <div className={styles.campo}>
           <label htmlFor="tarefa-responsavel">Responsável</label>
           <select
@@ -94,9 +97,9 @@ const [salvando, setSalvando] = useState(false);
             value={idUsuario}
             onChange={(e) => setIdUsuario(e.target.value)}
           >
-            {usuarios.map((usuario) => (
-              <option key={usuario.id} value={usuario.id}>
-                {usuario.nome}
+            {usuarios.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.nome}
               </option>
             ))}
           </select>
@@ -131,6 +134,7 @@ const [salvando, setSalvando] = useState(false);
             ))}
           </select>
         </div>
+
         {erros.length > 0 && (
           <ul className={styles.erros}>
             {erros.map((mensagem, i) => (
@@ -138,6 +142,7 @@ const [salvando, setSalvando] = useState(false);
             ))}
           </ul>
         )}
+
         <div className={styles.botoes}>
           <button onClick={onFechar}>Cancelar</button>
           <button onClick={handleSalvar} disabled={salvando}>

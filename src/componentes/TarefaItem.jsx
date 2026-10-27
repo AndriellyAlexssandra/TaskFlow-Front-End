@@ -8,6 +8,7 @@ const lixeirasPorPrioridade = {
   media: lixeiraLaranja,
   baixa: lixeiraVerde,
 };
+
 function TarefaItem({
   texto,
   prioridade = "media",
@@ -22,43 +23,30 @@ function TarefaItem({
   colunaAnterior = null,
   colunaProxima = null,
 }) {
-  const classePrioridade =
-    styles["badge-prioridade"] + " " + styles["badge-" + prioridade];
+  const classeItem = [styles.tarefa, styles[prioridade], concluido && styles.concluido]
+    .filter(Boolean)
+    .join(" ");
 
-  const classeItem = concluido
-    ? styles.tarefa + " " + styles.concluido
-    : styles.tarefa;
+  const classeTexto = [styles.textoTarefa, concluido && styles.textoConcluido]
+    .filter(Boolean)
+    .join(" ");
+
+  const classePrioridade = [styles["badge-prioridade"], styles["badge-" + prioridade]]
+    .filter(Boolean)
+    .join(" ");
+
   const estiloCor = corPrioridade
     ? { "--cor-prioridade": corPrioridade }
     : undefined;
-     const classeTexto = concluido ? styles.textoTarefa + " " + styles["texto-tarefa"] : styles.textoTarefa;
 
   return (
     <li className={classeItem} style={estiloCor}>
-        <div className={styles.linhaPrincipal}>
-          <span className={classeTexto} onDoubleClick={onEditar}>
+      <div className={styles.linhaPrincipal}>
+        <span className={classeTexto} onDoubleClick={onEditar}>
           {texto}
-          </span>
+        </span>
 
-          {(usuario || projeto) && (
-            <div className={styles.info}>
-              {usuario && (
-                <span className={styles.infoItem}>
-                  <span className={styles.infoRotulo}>Responsável</span>
-                  {usuario}
-                </span>
-              )}
-              {projeto && (
-                <span className={styles.infoItem}>
-                  <span className={styles.infoRotulo}>Projeto</span>
-                  {projeto}
-                </span>
-              )}
-            </div>
-          )}
-
-          <span className={styles["badge-prioridade"]}>{rotuloPrioridade || "Sem prioridade"}</span>
-          
+        {(colunaAnterior || colunaProxima) && (
           <div className={styles.acoes}>
             {colunaAnterior && (
               <button
@@ -87,28 +75,49 @@ function TarefaItem({
               </button>
             )}
           </div>
-        </div>
+        )}
+      </div>
 
-        <div className={styles.linhaSegundaria}>
-          <span className={classePrioridade}>
-            {rotuloPrioridade || prioridade}
-          </span>
-
-          <button
-            className={styles.btnDeletar}
-            onClick={(event) => {
-              event.stopPropagation();
-              onDeletar();
-            }}
-          >
-            <img
-              src={lixeirasPorPrioridade[prioridade]}
-              title="Deletar Tarefa"
-              className={styles.iconeLixeira}
-            />
-          </button>
+      {(usuario || projeto) && (
+        <div className={styles.info}>
+          {usuario && (
+            <div className={styles.infoItem}>
+              <span className={styles.infoRotulo}>Responsável</span>
+              <span className={styles.infoValor}>{usuario}</span>
+            </div>
+          )}
+          {projeto && (
+            <div className={styles.infoItem}>
+              <span className={styles.infoRotulo}>Projeto</span>
+              <span className={styles.infoValor}>{projeto}</span>
+            </div>
+          )}
         </div>
-      </li>
+      )}
+
+      <div className={styles.linhaSegundaria}>
+        <span className={classePrioridade}>
+          {rotuloPrioridade || prioridade}
+        </span>
+
+        <button
+          type="button"
+          className={styles.btnDeletar}
+          onClick={(event) => {
+            event.stopPropagation();
+            onDeletar();
+          }}
+        >
+          <img
+            src={lixeirasPorPrioridade[prioridade]}
+            alt="Deletar tarefa"
+            title="Deletar Tarefa"
+            className={styles.iconeLixeira}
+          />
+        </button>
+      </div>
+    </li>
   );
 }
+
 export default TarefaItem;
