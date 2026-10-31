@@ -22,7 +22,9 @@ function App() {
       )}
       <div
         className="app-conteudo"
-        style={{ marginLeft: token && sidebarAberta ? "220px" : "0" }}
+        style={{
+          marginLeft: token ? (sidebarAberta ? "256px" : "96px") : "0",
+        }}
       >
         <Routes>
           <Route

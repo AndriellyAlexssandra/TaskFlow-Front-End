@@ -9,7 +9,27 @@ const lixeirasPorPrioridade = {
   baixa: lixeiraVerde,
 };
 
+function IconeEditar() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="14"
+      height="14"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+    </svg>
+  );
+}
+
 function TarefaItem({
+  id,
   texto,
   prioridade = "media",
   rotuloPrioridade = "",
@@ -40,7 +60,15 @@ function TarefaItem({
     : undefined;
 
   return (
-    <li className={classeItem} style={estiloCor}>
+    <li
+      className={classeItem}
+      style={estiloCor}
+      draggable
+      onDragStart={(event) => {
+        event.dataTransfer.setData("text/plain", String(id));
+        event.dataTransfer.effectAllowed = "move";
+      }}
+    >
       <div className={styles.linhaPrincipal}>
         <span className={classeTexto} onDoubleClick={onEditar}>
           {texto}
@@ -51,12 +79,13 @@ function TarefaItem({
             {colunaAnterior && (
               <button
                 type="button"
-                className={styles.btnMover}
+                className={`${styles.btnMover} ${styles.btnVoltar}`}
                 onClick={(event) => {
                   event.stopPropagation();
                   onMover && onMover(colunaAnterior);
                 }}
                 title={`Mover para ${colunaAnterior}`}
+                aria-label={`Mover para ${colunaAnterior}`}
               >
                 ←
               </button>
@@ -64,12 +93,13 @@ function TarefaItem({
             {colunaProxima && (
               <button
                 type="button"
-                className={styles.btnMover}
+                className={`${styles.btnMover} ${styles.btnAvancar}`}
                 onClick={(event) => {
                   event.stopPropagation();
                   onMover && onMover(colunaProxima);
                 }}
                 title={`Mover para ${colunaProxima}`}
+                aria-label={`Mover para ${colunaProxima}`}
               >
                 →
               </button>
@@ -100,21 +130,38 @@ function TarefaItem({
           {rotuloPrioridade || prioridade}
         </span>
 
-        <button
-          type="button"
-          className={styles.btnDeletar}
-          onClick={(event) => {
-            event.stopPropagation();
-            onDeletar();
-          }}
-        >
-          <img
-            src={lixeirasPorPrioridade[prioridade]}
-            alt="Deletar tarefa"
-            title="Deletar Tarefa"
-            className={styles.iconeLixeira}
-          />
-        </button>
+        <div className={styles.acoesRodape}>
+          {onEditar && (
+            <button
+              type="button"
+              className={styles.btnEditar}
+              onClick={(event) => {
+                event.stopPropagation();
+                onEditar();
+              }}
+              title="Editar tarefa"
+              aria-label="Editar tarefa"
+            >
+              <IconeEditar />
+            </button>
+          )}
+
+          <button
+            type="button"
+            className={styles.btnDeletar}
+            onClick={(event) => {
+              event.stopPropagation();
+              onDeletar();
+            }}
+            aria-label="Deletar tarefa"
+          >
+            <img
+              src={lixeirasPorPrioridade[prioridade]}
+              alt=""
+              className={styles.iconeLixeira}
+            />
+          </button>
+        </div>
       </div>
     </li>
   );

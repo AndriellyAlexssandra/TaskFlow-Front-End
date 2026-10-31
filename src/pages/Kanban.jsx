@@ -4,6 +4,7 @@ import ListaTarefas from "../componentes/ListaTarefas.jsx";
 import ModalTarefa from "../componentes/ModalTarefa.jsx";
 import lixeiraCinza from "../assets/lixeira-cinza.png";
 
+import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
 
 function Kanban() {
@@ -18,6 +19,7 @@ function Kanban() {
   const [listaPrioridades, setListaPrioridades] = useState([]);
   const [listaUsuarios, setListaUsuarios] = useState([]);
   const [listaProjetos, setListaProjetos] = useState([]);
+  const { usuario } = useAuth();
 
   useEffect(() => {
     async function carregarTarefas() {
@@ -112,10 +114,6 @@ function Kanban() {
           NOME_PRIORIDADE[t.prioridade_id] === filtroPrioridade),
     );
 
-  const totalTarefas = tarefas.length;
-  const pendentes = tarefas.filter((t) => t.coluna !== "concluido").length;
-  const concluidas = tarefas.filter((t) => t.coluna === "concluido").length;
-
   function abrirModalCriar(coluna) {
     setTarefaEditando(null);
     setColunaAtiva(coluna);
@@ -133,9 +131,7 @@ function Kanban() {
       <Header
         titulo="Mine Kanban"
         subtitulo="Bem-vindo(a)! Organize sua rotina de forma simples e rápida."
-        total={totalTarefas}
-        pendentes={pendentes}
-        concluidas={concluidas}
+        saudacao={usuario ? `Olá, ${usuario.nome}!` : ""}
       />
       <main className="container">
         {carregando && (

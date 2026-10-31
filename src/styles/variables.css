@@ -18,7 +18,8 @@
   --text-label: #64748b;
   --text-placeholder: #5c5c68;
 
-  
+  --accent-text: #c3aef0;
+  --accent-bg: rgba(91, 62, 150, 0.18);
   --accent: #f47920;
   --accent-purple: #5b3e96;
   --accent-purple-light: #c3aef0;
@@ -48,4 +49,22 @@
   
   --transition-fast: 0.15s ease;
   --transition-base: 0.25s ease;
+}
+[data-theme="light"] {
+  color-scheme: light;
+  --bg-app: #f5f5f8;
+  --bg-sidebar: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-input: #ffffff;
+  --bg-hover: #eeeef3;
+  --border: rgba(0, 0, 0, 0.1);
+  --border-soft: rgba(0, 0, 0, 0.06);
+  --border-strong: #d4d4dc;
+  --text: #1a1a22;
+  --text-soft: #3f3f4a;
+  --text-muted: #6b6b76;
+  --text-label: #64748b;
+  --text-placeholder: #9a9aa5;
+   --accent-text: #5b3e96;
+  --accent-bg: rgba(91, 62, 150, 0.1);
 }

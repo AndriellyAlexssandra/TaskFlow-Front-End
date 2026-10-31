@@ -1,6 +1,6 @@
 import TarefaItem from "./TarefaItem.jsx";
 
-const CLASSE_PRIORIDADE = { 1: "baixa", 2: "media", 3: "alta" };
+const CLASSE_PRIORIDADE = { 1: "alta", 2: "media", 3: "baixa" };
 
 function ListaTarefas({
   tarefas,

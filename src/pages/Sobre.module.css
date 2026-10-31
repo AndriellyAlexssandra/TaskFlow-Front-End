@@ -1,76 +1,88 @@
 .pagina {
-  max-width: 900px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 56px 32px 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
+  padding: 56px 24px 80px;
 }
 
-.tituloDescricao h1 {
-  color: #f47920;
-  font-family: "Poppins", Arial, sans-serif;
-  font-size: 2rem;
-  margin-bottom: 16px;
+.titulo {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  line-height: 1.2;
+  color: var(--text);
 }
-.tituloDescricao p {
-  font-size: 15px;
-  color: #9a9aa5;
+.titulo::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin-top: 12px;
+  border-radius: 3px;
+  background: var(--gradient-primary);
+}
+
+.paragrafo {
+  margin-top: 18px;
+  font-size: 0.95rem;
   line-height: 1.8;
+  color: var(--text-soft);
 }
 
 .card {
-  background: #16161d;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  padding: 24px 28px;
+  margin-top: 28px;
+  padding: 28px 30px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  transition: border-color var(--transition-base);
 }
-.card h3 {
-  color: #4fc3f0;
-  font-size: 1.1rem;
-  margin-bottom: 16px;
-}
-.card h4 {
-  color: #a78bd8;
-  font-size: 1.05rem;
-  margin-bottom: 14px;
+.card:hover {
+  border-color: var(--border-strong);
 }
 
-.listaFuncoes {
+.cardTitulo {
+  margin-bottom: 18px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+}
+.cardLaranja .cardTitulo {
+  color: var(--accent);
+}
+
+.lista {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
-.listaFuncoes p {
-  font-size: 14.5px;
-  color: #b8b8c2;
+.lista li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 0.9rem;
   line-height: 1.6;
+  color: var(--text-muted);
 }
-.listaFuncoes strong {
-  color: #f2f2f7;
+.lista li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.lista strong {
+  color: var(--text);
+  font-weight: 600;
 }
 
-.tecnologias {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  list-style: none;
-}
-.tecnologias li {
-  color: #cdcdd6;
-  background: rgba(244, 121, 32, 0.1);
-  border: 1px solid rgba(244, 121, 32, 0.3);
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 13.5px;
-}
-
-.rodape {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  margin-top: 12px;
-  padding-top: 20px;
-  color: #6b6b76;
-  font-size: 0.8rem;
-  text-align: center;
-  line-height: 1.6;
+@media (max-width: 600px) {
+  .pagina {
+    padding: 36px 16px 60px;
+  }
+  .card {
+    padding: 22px 20px;
+  }
 }

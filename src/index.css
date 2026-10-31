@@ -3,10 +3,11 @@
   margin: 0;
   padding: 0;
 }
+
 body {
   font-family: "Poppins", Arial, sans-serif;
-  background-color: #101014;
-  color: #f2f2f7;
+  background-color: var(--bg-app);
+  color: var(--text);
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
@@ -14,14 +15,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-button, input, select {
+button,
+input,
+select {
   font-family: inherit;
 }
+
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 a:focus-visible {
-  outline: 2px solid #f47920;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -32,10 +36,11 @@ main {
   padding: 0 32px 32px;
   background: transparent;
 }
+
 main.container {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 50px 40px;
+  padding: 0 16px 32px;
 }
 
 #filtros {
@@ -43,28 +48,32 @@ main.container {
   gap: 10px;
   margin: 32px 0 24px;
 }
+
 .btn-filtro {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 9px 20px;
-  background-color: #16161d;
-  color: #9a9aa5;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background-color: var(--bg-sidebar);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
   border-radius: 24px;
   cursor: pointer;
   font-size: 13.5px;
   font-weight: 500;
-  transition: all 0.15s ease;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 .btn-filtro:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #f2f2f7;
+  border-color: var(--border-strong);
+  color: var(--text);
 }
 .btn-filtro.ativo {
-  background-color: rgba(91, 62, 150, 0.18);
-  color: #b9a3e3;
-  border-color: #5b3e96;
+  background-color: var(--accent-bg);
+  color: var(--accent-text);
+  border-color: var(--accent-purple);
   font-weight: 700;
 }
 
@@ -88,14 +97,14 @@ main.container {
 .kanban-coluna {
   min-width: 0;
   overflow: hidden;
-  background-color: #16161d;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 16px;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--transition-base);
 }
 .kanban-coluna:hover {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--border-strong);
 }
 
 .kanban-coluna-header {
@@ -104,29 +113,45 @@ main.container {
   align-items: center;
   margin-bottom: 14px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid var(--border-soft);
 }
 .kanban-coluna-header h2 {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #9a9aa5;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
-.kanban-coluna:nth-child(1) { border-top: 3px solid #4fc3f0; }
-.kanban-coluna:nth-child(2) { border-top: 3px solid #f47920; }
-.kanban-coluna:nth-child(3) { border-top: 3px solid #5b3e96; }
+.kanban-coluna:nth-child(1) {
+  border-top: 3px solid var(--accent-blue);
+}
+.kanban-coluna:nth-child(2) {
+  border-top: 3px solid var(--accent);
+}
+.kanban-coluna:nth-child(3) {
+  border-top: 3px solid var(--accent-purple);
+}
 
-.kanban-coluna:nth-child(1) .kanban-contador { background: rgba(79, 195, 240, 0.15); color: #4fc3f0; }
-.kanban-coluna:nth-child(2) .kanban-contador { background: rgba(244, 121, 32, 0.15); color: #f47920; }
-.kanban-coluna:nth-child(3) .kanban-contador { background: rgba(91, 62, 150, 0.25); color: #b9a3e3; }
+.kanban-coluna:nth-child(1) .kanban-contador {
+  background: color-mix(in srgb, var(--accent-blue) 15%, transparent);
+  color: var(--accent-blue);
+}
+.kanban-coluna:nth-child(2) .kanban-contador {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+}
+.kanban-coluna:nth-child(3) .kanban-contador {
+  background: var(--accent-bg);
+  color: var(--accent-text);
+}
 
 .kanban-coluna-header-acoes {
   display: flex;
   gap: 6px;
   align-items: center;
 }
+
 .kanban-contador {
   font-size: 0.72rem;
   font-weight: 700;
@@ -137,9 +162,9 @@ main.container {
 }
 
 .kanban-btn-add {
-  background-color: #1c1c25;
-  color: #9a9aa5;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background-color: var(--bg-hover);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
   border-radius: 7px;
   width: 26px;
   height: 26px;
@@ -150,12 +175,16 @@ main.container {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
 }
 .kanban-btn-add:hover {
-  background-color: #f47920;
+  background-color: var(--accent);
   color: #fff;
-  border-color: #f47920;
+  border-color: var(--accent);
   transform: translateY(-1px);
 }
 
@@ -168,11 +197,12 @@ main.container {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--transition-fast);
 }
 .kanban-btn-limpar:hover {
-  background-color: rgba(255, 46, 99, 0.12);
+  background-color: color-mix(in srgb, var(--prio-alta) 12%, transparent);
 }
+
 .icon-trash {
   width: 18px;
   height: 19px;
@@ -185,19 +215,38 @@ main.container {
 }
 
 .msg-vazia {
-  color: #6b6b76;
+  color: var(--text-label);
   font-size: 12.5px;
   text-align: center;
   padding: 24px 8px;
-  border: 1px dashed rgba(255, 255, 255, 0.07);
-  border-radius: 10px;
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-lg);
+}
+
+.btn-tema {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 13px;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+.btn-tema:hover {
+  border-color: var(--accent);
+  color: var(--text);
 }
 
 footer {
   text-align: center;
   padding: 16px;
   font-size: 11px;
-  color: #6b6b76;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--text-label);
+  border-top: 1px solid var(--border-soft);
   margin-top: auto;
 }
