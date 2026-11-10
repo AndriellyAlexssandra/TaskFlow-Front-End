@@ -18,17 +18,20 @@ function ModalTarefa({
   usuarios = [],
   projetos = [],
 }) {
-const { usuario } = useAuth();
-const [texto, setTexto] = useState("");
-const [idPrioridade, setIdPrioridade] = useState(2);
-const [idUsuario, setIdUsuario] = useState("");
-const [idProjeto, setIdProjeto] = useState("");
-const [erros, setErros] = useState([]);
-const [salvando, setSalvando] = useState(false);
+  const { usuario } = useAuth();
+  const [texto, setTexto] = useState("");
+  const [idPrioridade, setIdPrioridade] = useState(2);
+  const [idUsuario, setIdUsuario] = useState("");
+  const [idProjeto, setIdProjeto] = useState("");
+  const [erros, setErros] = useState([]);
+  const [erroTexto, setErroTexto] = useState("");
+  const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
     setErros([]);
     if (tarefa) {
+      setErros([]);
+      setErroTexto("");
       setTexto(tarefa.texto);
       setIdPrioridade(tarefa.prioridade_id);
       setIdUsuario(tarefa.usuario_id);
@@ -54,7 +57,11 @@ const [salvando, setSalvando] = useState(false);
   }, [aberto, onFechar]);
 
   async function handleSalvar() {
-    if (texto.trim() === "") return;
+    if (texto.trim() === "") {
+      setErroTexto("O texto é obrigatório.");
+      return;
+    }
+    setErroTexto("");
     setErros([]);
     setSalvando(true);
     try {
