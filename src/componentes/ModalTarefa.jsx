@@ -28,9 +28,11 @@ function ModalTarefa({
   const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
+    if (!aberto) return;
+
     setErros([]);
+
     if (tarefa) {
-      setErros([]);
       setTexto(tarefa.texto);
       setIdPrioridade(tarefa.prioridade_id);
       setIdUsuario(tarefa.usuario_id);
@@ -41,7 +43,7 @@ function ModalTarefa({
       setIdUsuario(usuario?.id || usuarios[0]?.id || "");
       setIdProjeto(projetos[0]?.id || "");
     }
-  }, [tarefa, aberto]);
+  }, [aberto, tarefa?.id]);
 
   useEffect(() => {
     if (!aberto) return;
@@ -56,7 +58,9 @@ function ModalTarefa({
   }, [aberto, onFechar]);
 
   async function handleSalvar() {
+    console.log("TEXTO RECEBIDO:", JSON.stringify(texto));
     if (!texto.trim()) {
+       console.log("VALIDAÇÃO DE CAMPO VAZIO ATIVADA");
       setErros(["O texto é obrigatório."]);
       return;
     }
