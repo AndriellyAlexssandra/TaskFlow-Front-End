@@ -24,14 +24,13 @@ function ModalTarefa({
   const [idUsuario, setIdUsuario] = useState("");
   const [idProjeto, setIdProjeto] = useState("");
   const [erros, setErros] = useState([]);
-  const [erroTexto, setErroTexto] = useState("");
+
   const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
     setErros([]);
     if (tarefa) {
       setErros([]);
-      setErroTexto("");
       setTexto(tarefa.texto);
       setIdPrioridade(tarefa.prioridade_id);
       setIdUsuario(tarefa.usuario_id);
@@ -57,13 +56,14 @@ function ModalTarefa({
   }, [aberto, onFechar]);
 
   async function handleSalvar() {
-    if (texto.trim() === "") {
-      setErroTexto("O texto é obrigatório.");
+    if (!texto.trim()) {
+      setErros(["O texto é obrigatório."]);
       return;
     }
-    setErroTexto("");
+
     setErros([]);
     setSalvando(true);
+
     try {
       await onSalvar({
         ...tarefa,
@@ -74,6 +74,7 @@ function ModalTarefa({
         usuario_id: paraNumero(idUsuario),
         projeto_id: paraNumero(idProjeto),
       });
+
       onFechar();
     } catch (e) {
       setErros(mensagensdeErro(e));
@@ -81,6 +82,7 @@ function ModalTarefa({
       setSalvando(false);
     }
   }
+
   if (!aberto) return null;
 
   return (
@@ -93,7 +95,10 @@ function ModalTarefa({
             id="tarefa-texto"
             placeholder="Texto da tarefa"
             value={texto}
-            onChange={(e) => setTexto(e.target.value)}
+            onChange={(e) => {
+              setTexto(e.target.value);
+              setErros([]);
+            }}
           />
         </div>
 
