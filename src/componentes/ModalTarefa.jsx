@@ -59,8 +59,9 @@ function ModalTarefa({
 
   async function handleSalvar() {
     console.log("TEXTO RECEBIDO:", JSON.stringify(texto));
+
     if (!texto.trim()) {
-       console.log("VALIDAÇÃO DE CAMPO VAZIO ATIVADA");
+      console.log("VALIDAÇÃO DE CAMPO VAZIO ATIVADA");
       setErros(["O texto é obrigatório."]);
       return;
     }
