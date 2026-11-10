@@ -24,10 +24,15 @@ function Login() {
     } catch (err) {
       console.log("ERRO NO LOGIN:", err);
 
-      if (err.response?.status === 401) {
+      const status = err.response?.status;
+      const mensagem = mensagensdeErro(err).filter(Boolean).join(" ");
+
+      if (status === 401 || status === 400) {
         setErro("Credenciais inválidas. Verifique seu email e senha.");
       } else {
-        setErro(mensagensdeErro(err).join(" "));
+        setErro(
+          mensagem || "Não foi possível realizar o login. Tente novamente.",
+        );
       }
 
       setShake(true);
