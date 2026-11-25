@@ -62,5 +62,69 @@ describe("ModalTarefa", () => {
     };
 
     abrirModal({ tarefa });
+
+    expect(
+      screen.getByRole("heading", { name: "Editar tarefa" }),
+    ).toBeInTheDocument();
+
+    expect(screen.getByLabelText("Tarefa")).toHaveValue("Estudar Node JS");
+    expect(screen.getByLabelText("Responsável")).toHaveValue("8");
+  });
+  test("o que a pessoa digita aparece no campo", async () => {
+    const user = userEvent.setup();
+    abrirModal();
+
+    const campo = screen.getByLabelText("Tarefa");
+    await user.type(campo, "Estudar mocks");
+
+    expect(campo).toHaveValue("Estudar mocks");
+  });
+  test("Cancelar e Esc chamam onFechar", async () => {
+    const user = userEvent.setup();
+    const onFechar = vi.fn();
+    abrirModal({ onFechar });
+
+    await user.click(screen.getByRole("button", { name: "Cancelar" }));
+    await user.keyboard("{Escape}");
+
+    expect(onFechar).toHaveBeenCalledTimes(2);
+  });
+  test("Salvar envia os dados e fecha o modal", async () => {
+    const user = userEvent.setup();
+    const onSalvar = vi.fn().mockResolvedValue();
+    const onFechar = vi.fn();
+
+    abrirModal({ onSalvar, onFechar, coluna: "afazer" });
+
+    await user.type(screen.getByLabelText("Tarefa"), "Estudar mocks");
+    await user.selectOptions(screen.getByLabelText("Prioridades"), "alta");
+    await user.click(screen.getByRole("button", { name: "Salvar" }));
+
+    expect(onSalvar).toHaveBeenCalledWith({
+      texto: "Estudar mocks",
+      coluna: "afazer",
+      prioridade_id: 1,
+      usuario_id: 1,
+      projeto_id: 25,
+    });
+
+    expect(onFechar).toHaveBeenCalledTimes(1);
+  });
+  test("a API recusa: mostra os erros e não fecha", async () => {
+    const user = userEvent.setup();
+
+    const erro400 = {
+      response: { data: { erro: { detalhes: ["O texto é obrigatório."] } } },
+    };
+    const onSalvar = vi.fn().mockRejectedValue(erro400);
+    const onFechar = vi.fn();
+
+    abrirModal({ onSalvar, onFechar });
+    await user.click(screen.getByRole("button", { name: "Salvar" }));
+
+    expect(
+      await screen.findByText("O texto é obrigatório."),
+    ).toBeInTheDocument();
+    expect(onFechar).not.toHaveBeenCalled();
   });
 });

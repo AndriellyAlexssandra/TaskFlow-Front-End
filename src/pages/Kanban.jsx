@@ -104,7 +104,7 @@ function Kanban() {
     }
   };
 
-  const NOME_PRIORIDADE = { 1: "baixa", 2: "media", 3: "alta" };
+  const NOME_PRIORIDADE = { 1: "alta", 2: "media", 3: "baixa" };
 
   const tarefasPorColuna = (nomeColuna) =>
     tarefas.filter(
@@ -186,6 +186,7 @@ function Kanban() {
                   <button
                     className="kanban-btn-add"
                     onClick={() => abrirModalCriar("afazer")}
+                    title="Nova tarefa em A Fazer"
                   >
                     +
                   </button>
@@ -224,6 +225,7 @@ function Kanban() {
                   <button
                     className="kanban-btn-add"
                     onClick={() => abrirModalCriar("andamento")}
+                    title="Nova tarefa em Em Andamento"
                   >
                     +
                   </button>
@@ -262,6 +264,7 @@ function Kanban() {
                   <button
                     className="kanban-btn-add"
                     onClick={() => abrirModalCriar("concluido")}
+                    title="Nova tarefa em Em Concluido"
                   >
                     +
                   </button>
