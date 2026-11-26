@@ -127,4 +127,18 @@ describe("ModalTarefa", () => {
     ).toBeInTheDocument();
     expect(onFechar).not.toHaveBeenCalled();
   });
+  test("um onSalvar que nunca responde, o botão vira 'Salvando...' e fica desabilitado", async () => {
+    const user = userEvent.setup();
+    const onSalvar = vi.fn().mockReturnValue(new Promise(() => {}));
+    abrirModal({ onSalvar });
+
+    await user.type(screen.getByLabelText("Tarefa"), "Estudar mocks");
+
+    const botaoSalvar = screen.getByRole("button", { name: /Salvar/i });
+    await user.click(botaoSalvar);
+
+    expect(botaoSalvar).toHaveTextContent("Salvando..");
+    expect(botaoSalvar).toBeDisabled();
+  });
+  
 });
